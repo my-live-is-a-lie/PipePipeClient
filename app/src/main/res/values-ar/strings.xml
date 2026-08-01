@@ -750,7 +750,6 @@
     <string name="semitone">نصف نغمة</string>
     <string name="large_grid">شبكة كبيرة</string>
     <string name="card">بطاقة</string>
-    <string name="card">بطاقة</string>
     <string name="app_update_unavailable_toast">أنت تستخدم أحدث إصدار من PipePipe</string>
     <string name="error_sabr_download_failed">فشل تنزيل SABR</string>
     <string name="error_sabr_download_format">لا يمكن تنزيل تنسيق SABR هذا</string>
