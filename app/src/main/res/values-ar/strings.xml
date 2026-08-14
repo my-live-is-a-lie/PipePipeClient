@@ -7,7 +7,7 @@
     <string name="detail_dislikes_img_view_description">عدم الإعجاب</string>
     <string name="detail_likes_img_view_description">الإعجابات</string>
     <string name="detail_thumbnail_view_description">مدة تشغيل الفيديو:</string>
-    <string name="detail_uploader_thumbnail_view_description">الصورة المصغرة لملف تعريف الناشر</string>
+    <string name="detail_uploader_thumbnail_view_description">الصورة الرمزية المصغرة للناشر</string>
     <string name="did_you_mean">هل تقصد \"%1$s\"؟</string>
     <string name="download">تنزيل</string>
     <string name="download_dialog_title">تنزيل</string>
@@ -74,7 +74,7 @@
     <string name="duration_live">بث مباشر</string>
     <string name="error_report_title">تقرير عن المشكلة</string>
     <string name="disabled">معطل</string>
-    <string name="clear">تنظيف</string>
+    <string name="clear">مسح</string>
     <string name="best_resolution">أفضل دقة</string>
     <string name="undo">تراجع</string>
     <string name="play_all">تشغيل الكل</string>
@@ -101,7 +101,7 @@
     <string name="retry">إعادة المحاولة</string>
     <string name="short_thousand">ألف</string>
     <string name="short_million">مليون</string>
-    <string name="short_billion">بليون</string>
+    <string name="short_billion">مليار</string>
     <string name="no_subscribers">ليس هناك مشترِكون</string>
     <plurals name="subscribers">
         <item quantity="zero">%s مشترك</item>
@@ -112,7 +112,7 @@
         <item quantity="other">%s مشترك</item>
     </plurals>
     <string name="no_views">دون مشاهدات</string>
-    <string name="no_videos">لاتوجد فيديوهات</string>
+    <string name="no_videos">لا توجد فيديوهات</string>
     <string name="start">ابدأ</string>
     <string name="pause">إيقاف مؤقت</string>
     <string name="delete">حذف</string>
@@ -131,6 +131,7 @@
     <string name="charset_letters_and_digits">الحروف والأرقام</string>
     <string name="charset_most_special_characters">معظم الأحرف الخاصة</string>
     <string name="title_licenses">تراخيص الجهات الخارجية</string>
+    <string name="copyright">© %1$s بواسطة %2$s تحت %3$s</string>
     <string name="contribution_title">ساهم</string>
     <string name="contribution_encouragement">إذا كانت لديك أفكار تخص الترجمة، أو تغييرات في التصميم، أو تنظيف وتحسين الشفرة البرمجية، أو تعديلات عميقة عليها، فتذكّر أنّ مساعدتك دائمًا موضع ترحيب. وكلما أتممنا شيئًا كان ذلك أفضل!</string>
     <string name="view_on_github">عرض على GitHub</string>
@@ -167,8 +168,7 @@
         <item quantity="many">%s فيديو</item>
         <item quantity="other">%s فيديو</item>
     </plurals>
-    <string name="recaptcha_request_toast">طلب اختبار reCAPTCHA مطلوب</string>
-    <string name="copyright" formatted="true">© %1$s بواسطة %2$s تحت %3$s</string>
+    <string name="recaptcha_request_toast">اختبار reCAPTCHA مطلوب</string>
     <string name="kiosk_page_summary">صفحة الكشك</string>
     <string name="select_a_kiosk">حدد كشك</string>
     <string name="start_here_on_background">ابدأ التشغيل في الخلفية</string>
@@ -190,7 +190,7 @@
     <string name="settings_category_debug_title">تحليل</string>
     <string name="video_streams_empty">لم يتم العثور على أي بث مرئي</string>
     <string name="audio_streams_empty">لم يتم العثور على أي بث صوتي</string>
-    <string name="detail_drag_description">اسحب لإعادة ترتيب</string>
+    <string name="detail_drag_description">اسحب لإعادة الترتيب</string>
     <string name="create">إنشاء</string>
     <string name="dismiss">إلغاء</string>
     <string name="rename">إعادة التسمية</string>
@@ -213,12 +213,12 @@
     <string name="controls_download_desc">تنزيل ملف البث</string>
     <string name="tab_bookmarks">الإشارات المرجعية</string>
     <string name="use_inexact_seek_title">استعمال التقديم السريع الغير دقيق</string>
-    <string name="use_inexact_seek_summary">خاصية التقديم الغير دقيق تسمح للمشغل بالقفز خلال الفديو بشكل أسرع مع دقة قفز أقل. خاصية القفز لـ 5، 15، 25 ثانية لا تعمل مع القفز الغير دقيق</string>
+    <string name="use_inexact_seek_summary">خاصية التقديم الغير دقيق تسمح للمشغل بالقفز خلال الفيديو بشكل أسرع مع دقة قفز أقل. خاصية القفز لـ 5، 15، 25 ثانية لا تعمل مع القفز الغير دقيق</string>
     <string name="download_thumbnail_title">تحميل الصور المصغرة</string>
     <string name="thumbnail_cache_wipe_complete_notice">تم إفراغ مساحة ذاكرة التخزين المؤقتة الخاصة بالصور</string>
     <string name="file">الملف</string>
     <string name="invalid_directory">لا يوجد مجلد بهذا الاسم</string>
-<string name="file_name_empty_error">لا يمكن أن يكون اسم الملف فارغًا</string>
+    <string name="file_name_empty_error">لا يمكن أن يكون اسم الملف فارغًا</string>
     <string name="error_occurred_detail">حدث خطأٌ ما: %1$s</string>
     <string name="no_valid_zip_file">ملف مضغوط ZIP غير صالح</string>
     <string name="unbookmark_playlist">إزالة الإشاراة المرجعية</string>
@@ -235,14 +235,14 @@
     <string name="metadata_cache_wipe_title">امسح البيانات الوصفيّة المخزّنة مؤقّتًا</string>
     <string name="metadata_cache_wipe_summary">إزالة جميع بيانات صفحات الويب المخزنة مؤقّتًا</string>
     <string name="metadata_cache_wipe_complete_notice">تم محو ذاكرة التخزين المؤقتّة للبيانات الوصفيّة</string>
-    <string name="auto_queue_title">وضع البث القادم تلقائيا في قائمة الانتظار</string>
+    <string name="auto_queue_title">وضع البث القادم تلقائيًا في قائمة الانتظار</string>
     <string name="auto_queue_summary">استمر بعد انتهاء قائمة التشغيل (غير المتكررة) من خلال إلحاق بث مشابه</string>
     <string name="set_as_playlist_thumbnail">تعيين كصورة مصغرة لقائمة التشغيل</string>
     <string name="bookmark_playlist">تفضيل قائمة التشغيل</string>
     <string name="playlist_thumbnail_change_success">تم تغيير الصورة المصغرة لقائمة التشغيل.</string>
     <string name="caption_none">بدون تسميات توضيحية</string>
     <string name="caption_setting_title">تسميات توضيحية</string>
-    <string name="caption_setting_description">تعديل مشغل نص التسمية التوضيحية وأنماط الخلفية. يتطلب إعادة تشغيل التطبيق لتصبح التغييرات سارية المفعول</string>
+    <string name="caption_setting_description">تعديل نص التسمية التوضيحية وأنماط الخلفية للمشغل. يتطلب إعادة تشغيل التطبيق لتصبح التغييرات سارية المفعول</string>
     <string name="enable_leak_canary_summary">قد تتسبب مراقبة تسرب الذاكرة في عدم استجابة التطبيق عند تفريغ السجلات</string>
     <string name="enable_disposed_exceptions_title">تقرير الأخطاء خارج دورة الحياة</string>
     <string name="enable_disposed_exceptions_summary">فرض الإبلاغ عن استثناءات Rx غير القابلة للتسليم خارج دورة حياة الجزء أو النشاط بعد التخلص منها</string>
@@ -347,7 +347,7 @@
     <string name="download_already_running">هنالك تحميل قيد التقدم بهذا الاسم</string>
     <string name="show_error">إظهار خطأ</string>
     <string name="error_file_creation">لا يمكن إنشاء الملف</string>
-    <string name="error_path_creation">لا يمكن إنشاء المجلد الوجهة</string>
+    <string name="error_path_creation">لا يمكن إنشاء المجلد في هذا المكان</string>
     <string name="error_ssl_exception">فشل الاتصال الآمن</string>
     <string name="error_unknown_host">تعذر العثور على الخادم</string>
     <string name="error_connect_host">لا يمكن الاتصال بالخادم</string>
@@ -413,7 +413,7 @@
     <string name="peertube_instance_url_title">مثيلات خوادم PeerTube</string>
     <string name="peertube_instance_url_summary">حدد مثيلات PeerTube المفضلة لديك</string>
     <string name="peertube_instance_add_title">إضافة مثيل</string>
-    <string name="peertube_instance_add_help">أدخل عنوان للمثيل</string>
+    <string name="peertube_instance_add_help">أدخل عنوانا للمثيل</string>
     <string name="peertube_instance_add_fail">لا يمكن التحقق من صحة المثيل</string>
     <string name="peertube_instance_add_https_only">يتم دعم عناوين URL التي تستخدم HTTPS فقط</string>
     <string name="peertube_instance_add_exists">المثيل موجود بالفعل</string>
@@ -425,7 +425,7 @@
     <string name="error_download_resource_gone">لا يمكن استرداد هذا التنزيل</string>
     <string name="choose_instance_prompt">اختيار مثيل</string>
     <string name="peertube_instance_url_help">ابحث عن مثيلات الخوادم التي تناسبك على %s</string>
-    <string name="clear_download_history">تنظيف تاريخ التحميل</string>
+    <string name="clear_download_history">مسح تاريخ التحميل</string>
     <string name="delete_downloaded_files">حذف الملفات المحملة</string>
     <string name="permission_display_over_apps">امنح الإذن بالعرض فوق التطبيقات الأخرى</string>
     <string name="app_language_title">لغة التطبيق</string>
@@ -441,7 +441,7 @@
         <item quantity="many">%d ثانية</item>
         <item quantity="other">%d ثانية</item>
     </plurals>
-<string name="feed_use_dedicated_fetch_method_disable_button">تعطيل الوضع السريع</string>
+    <string name="feed_use_dedicated_fetch_method_disable_button">تعطيل الوضع السريع</string>
     <string name="feed_use_dedicated_fetch_method_enable_button">تمكين الوضع السريع</string>
     <string name="feed_use_dedicated_fetch_method_summary">متوفر في بعض الخدمات، وعادةً ما يكون أسرع بكثير ولكن قد يُرجع كمية محدودة من العناصر وغالبًا ما تكون معلومات غير مكتملة (مثلًا بدون مدة أو نوع عنصر أو حالة مباشرة)</string>
     <string name="feed_use_dedicated_fetch_method_title">جلب من تغذية مخصصة عندما تكون متاحة</string>
@@ -501,10 +501,10 @@
     <string name="songs">الأغاني</string>
     <string name="restricted_video">هذا الفيديو مقيد بالفئة العمرية.
 \n
-\nقم بتشغيل \"%1$s\" في الإعدادات إذا كنت تريد رؤيته.</string>
+\nقم بتفعيل \"%1$s\" في الإعدادات إذا كنت تريد رؤيته.</string>
     <string name="remove_watched_popup_yes_and_partially_watched_videos">نعم، ومقاطع الفيديو التي تمت مشاهدتها جزئيًا</string>
     <string name="remove_watched_popup_warning">ستتم إزالة مقاطع الفيديو التي تمت مشاهدتها قبل وبعد إضافتها إلى قائمة التشغيل.
-\nهل أنت واثق؟ لا يمكن التراجع عن هذا!</string>
+\nهل أنت متأكد؟ لا يمكن التراجع عن هذا!</string>
     <string name="remove_watched_popup_title">إزالة مقاطع الفيديو التي تمت مشاهدتها؟</string>
     <string name="remove_watched">إزالة ما تمت مشاهدته</string>
     <string name="show_original_time_ago_summary">ستكون النصوص الأصلية من الخدمات مرئية في عناصر البث</string>
@@ -536,7 +536,7 @@
     <string name="notification_action_2_title">زر الإجراء الثالث</string>
     <string name="notification_action_1_title">زر الإجراء الثاني</string>
     <string name="notification_action_0_title">زر الإجراء الأول</string>
-    <string name="notification_scale_to_square_image_summary">قياس الصورة المصغرة للفيديو المعروض في الإشعار من 16:9 إلى 1:1 نسبة العرض إلى الارتفاع (قد يؤدي إلى تشوهات)</string>
+    <string name="notification_scale_to_square_image_summary">قياس الصورة المصغرة للفيديو المعروضة في الإشعار من 16:9 إلى 1:1 نسبة العرض إلى الارتفاع (قد يؤدي إلى تشوهات)</string>
     <string name="notification_scale_to_square_image_title">مقياس الصورة المصغرة إلى نسبة عرض إلى ارتفاع 1:1</string>
     <string name="recaptcha_cookies_cleared">تم مسح ملفات تعريف الارتباط reCAPTCHA</string>
     <string name="clear_cookie_title">امسح ملفات تعريف الارتباط reCAPTCHA</string>
@@ -560,7 +560,7 @@
     <string name="comments_tab_description">التعليقات</string>
     <string name="open_with">فتح مع</string>
     <string name="georestricted_content">هذا المحتوى غير متوفر في بلدك.</string>
-    <string name="crash_the_app">اغلق التطبيق قسريا</string>
+    <string name="crash_the_app">اغلق التطبيق قسريًا</string>
     <string name="radio">إذاعة</string>
     <string name="featured">المميزة</string>
     <string name="recaptcha_solve">حل</string>
@@ -587,7 +587,7 @@
     <string name="metadata_category">الصنف</string>
     <string name="description_select_disable">تعطيل تحديد النص في الوصف</string>
     <string name="description_select_enable">تمكين تحديد النص في الوصف</string>
-    <string name="description_select_note">يمكنك الآن تحديد آي نص داخل الوصف. لاحظ أن الصفحة قد تومض وقد لا تكون الروابط قابلة للنقر أثناء وضع التحديد.</string>
+    <string name="description_select_note">يمكنك الآن تحديد أي نص داخل الوصف. لاحظ أن الصفحة قد تومض وقد لا تكون الروابط قابلة للنقر أثناء وضع التحديد.</string>
     <string name="open_website_license">فتح الموقع</string>
     <string name="service_provides_reason">%s يقدم هذا السبب:</string>
     <string name="account_terminated">تم إنهاء الحساب</string>
@@ -657,7 +657,7 @@
     <string name="loading_stream_details">تحميل تفاصيل البث…</string>
     <string name="notifications_disabled">تم تعطيل الإشعارات</string>
     <string name="streams_notification_channel_name">بث جديد</string>
-<string name="settings_category_player_notification_title">إشعار المشغل</string>
+    <string name="settings_category_player_notification_title">إشعار المشغل</string>
     <string name="you_successfully_subscribed">لقد اشتركت الآن في هذه القناة</string>
     <string name="streams_notification_channel_description">الإخطارات حول التدفقات الجديدة للاشتراكات</string>
     <string name="enable_streams_notifications_title">إشعارات أحداث البث الجديدة</string>
@@ -730,7 +730,7 @@
     <string name="sponsor_block_category_self_promo">ترويج ذاتي غير مدفوع</string>
     <string name="sponsor_block_category_non_music">موسيقى: قسم غير موسيقي</string>
     <string name="sponsor_block_category_preview">معاينة/تلخيص</string>
-    <string name="sponsor_block_category_filler">استطراد/طرائف حشو</string>
+    <string name="sponsor_block_category_filler">استطراد/مقاطع حشو</string>
     <string name="sponsor_block_category_pending">قيد المراجعة</string>
     <string name="sponsor_block_home_page_title">عرض الموقع</string>
     <string name="sponsor_block_home_page_summary">عرض الموقع الرسمي لـSponsorBlock.</string>
@@ -851,7 +851,7 @@
     <string name="import_urls_error">خطأ في استيراد الروابط: %s</string>
     <string name="import_urls_no_valid_urls">لم يتم العثور على روابط صالحة في الملف المحدد</string>
     <string name="bullet_comments_opacity_title">شفافية التعليقات العائمة</string>
-    <string name="override_cookies_summary">استخدام ملفات تعريف ارتباط مُدخلة يدويًا بدل بيانات الاعتماد المحفوظة</string>
+    <string name="override_cookies_summary">استخدام ملفات تعريف ارتباط مُدخلة يدويًا بدلا من بيانات الاعتماد المحفوظة</string>
     <string name="override_cookies_title">تجاوز ملفات تعريف الارتباط</string>
     <string name="override_cookies_value_title">تعديل ملفات تعريف الارتباط</string>
     <string name="lives">البث المباشر</string>
@@ -876,7 +876,7 @@
     <string name="sort_rating">التقييم</string>
     <string name="sort_ascending">تصاعدي</string>
     <string name="sort">ترتيب</string>
-<string name="settings_category_exoplayer_title">إعدادات ExoPlayer</string>
+    <string name="settings_category_exoplayer_title">إعدادات ExoPlayer</string>
     <string name="settings_category_exoplayer_summary">إدارة بعض إعدادات ExoPlayer. تتطلب هذه التغييرات إعادة تشغيل المشغل لتفعيلها</string>
     <string name="always_use_exoplayer_set_output_surface_workaround_title">استخدام الحل البديل لسطح إخراج فيديو ExoPlayer دائمًا</string>
     <string name="always_use_exoplayer_set_output_surface_workaround_summary">يقوم هذا الحل البديل بتحرير وإعادة إنشاء وحدات ترميز الفيديو عند حدوث تغيير في السطح، بدلًا من تعيين السطح لوحدة الترميز مباشرة. يُستخدم مسبقًا في ExoPlayer على بعض الأجهزة التي تعاني من هذه المشكلة، ولا تأثير لهذا الإعداد إلا على أندرويد 6 وأحدث\n\nتفعيل هذا الخيار قد يمنع أخطاء التشغيل عند تبديل مشغل الفيديو الحالي أو التبديل لملء الشاشة</string>
@@ -890,6 +890,7 @@
     <string name="sort_origin_reverse">الأصلي (عكسي)</string>
     <string name="dialog_title_enable_update_checker">تفعيل فاحص التحديثات</string>
     <string name="dialog_message_enable_update_checker">هل تريد تفعيل فاحص التحديثات؟ يمكنك تعطيله من الإعدادات.</string>
+    <string name="title_staff_list">قائمة الطاقم</string>
     <string name="stat_view">مشاهدة</string>
     <string name="stat_danmaku">Danmaku</string>
     <string name="stat_reply">رد</string>
@@ -984,7 +985,7 @@
     <string name="stream_processing_failed_count">(فشل: %d)</string>
     <string name="stream_processing_complete">اكتملت المعالجة. ناجح: %1$d، فاشل: %2$d، متجاوَز: %3$d</string>
     <string name="stream_processing_failed">فشلت معالجة البث.</string>
-    <string name="failed_streams">بثوث فاشلة</string>
+    <string name="failed_streams">البثوث الفاشلة</string>
     <string name="auto_ellipsize_summary">اختصار العنوان والتعليقات الطويلة تلقائيًا</string>
     <string name="auto_ellipsize_title">اختصار تلقائي</string>
     <string name="announcement">إعلان</string>
@@ -1065,14 +1066,11 @@
     <string name="export_data_to_newpipe_title">تصدير إلى NewPipe</string>
     <string name="export_data_to_newpipe_summary">تصدير النسخة الاحتياطية بصيغة متوافقة مع NewPipe</string>
     <string name="settings_category_other_platforms_title">منصات أخرى</string>
-    <string name="use_dns_over_https_fallback_title">استخدام DNS عبر HTTPS كخيار احتياطي</string>
-    <string name="use_dns_over_https_fallback_summary">إعادة محاولة عمليات بحث DNS الفاشلة في النظام باستخدام Cloudflare DNS عبر HTTPS. تغيير هذا سيعيد تشغيل التطبيق.</string>
     <string name="youtube_player_client_title">نقطة استخراج يوتيوب</string>
     <string name="webview_unavailable_youtube_hint">WebView غير متاح. تأكد من أن إصدار WebView الخاص بك أعلى من 80.\n\nأندرويد 6 و10: حدّث WebView من Play Store.\nأندرويد 7 و8 و9: حدّث Chrome من Play Store.\nإصدارات أخرى: هذا لا يجب أن يحدث. يرجى تقديم تقرير على GitHub.</string>
     <string name="sabr_backoff_notification_channel_name">انتظار تشغيل يوتيوب</string>
     <string name="sabr_backoff_notification_channel_description">إشعارات عندما يتطلب يوتيوب انتظار طلب التشغيل</string>
     <string name="sabr_backoff_notification_title">في انتظار يوتيوب</string>
-    <string name="youtube_send_session_visitor_data_summary">إرسال بيانات الزائر إلى يوتيوب. يساعد على تجنب حظر IP المؤقت، لكنك قد تُضطر لانتظار الإعلانات بشكل متكرر أكثر</string>
     <string name="sabr_backoff_notification_content">يفرض يوتيوب علينا الانتظار %1$d ثانية قبل الاستمرار بالتشغيل</string>
     <string name="restricted_video_no_stream_new">هذا الفيديو مقيد بالفئة العمرية.\nقم بتسجيل الدخول من الإعدادات إذا كنت تريد مشاهدته.</string>
     <string name="app_update_notification_channel_description_new">إشعارات لإصدارات PipePipe الجديدة</string>
