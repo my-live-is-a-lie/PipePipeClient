@@ -78,8 +78,8 @@
     <string name="best_resolution">أفضل دقة</string>
     <string name="undo">تراجع</string>
     <string name="play_all">تشغيل الكل</string>
-    <string name="notification_channel_name">تنبيهات NewPipe</string>
-    <string name="notification_channel_description">تنبيهات مشغل NewPipe</string>
+    <string name="notification_channel_name">تنبيهات PipePipe</string>
+    <string name="notification_channel_description">تنبيهات مشغل PipePipe</string>
     <string name="unknown_content">[غير معروف]</string>
     <string name="could_not_setup_download_menu">تعذر إعداد قائمة التنزيل</string>
     <string name="app_ui_crash">تعطل التطبيق / واجهة المستخدم</string>
