@@ -12,6 +12,7 @@ import androidx.preference.ListPreference;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 
+import org.schabi.newpipe.App;
 import org.schabi.newpipe.R;
 import org.schabi.newpipe.util.DeviceUtils;
 import org.schabi.newpipe.util.NavigationHelper;
@@ -44,19 +45,6 @@ public class AdvancedSettingsFragment extends BasePreferenceFragment implements 
                 .setOnPreferenceChangeListener((preference, newValue) -> {
                     defaultPreferences.edit()
                             .putBoolean(getString(R.string.use_experimental_new_ui_key),
-                                    (Boolean) newValue)
-                            .commit();
-                    final Activity activity = getActivity();
-                    if (activity != null) {
-                        NavigationHelper.restartApp(activity);
-                    }
-                    return true;
-                });
-
-        findPreference(getString(R.string.use_dns_over_https_fallback_key))
-                .setOnPreferenceChangeListener((preference, newValue) -> {
-                    defaultPreferences.edit()
-                            .putBoolean(getString(R.string.use_dns_over_https_fallback_key),
                                     (Boolean) newValue)
                             .commit();
                     final Activity activity = getActivity();
@@ -162,34 +150,16 @@ public class AdvancedSettingsFragment extends BasePreferenceFragment implements 
         final String[] values = getResources().getStringArray(
                 R.array.youtube_player_client_values);
         if (loggedIn) {
-            preference.setEntries(new CharSequence[]{entries[3], entries[0]});
-            preference.setEntryValues(new CharSequence[]{values[3], values[0]});
-            final String selected = preference.getValue();
-            if (!isYoutubePlayerClientAllowed(selected, values[3], values[0])) {
-                preference.setValue("tv_downgraded");
-                defaultPreferences.edit().putString(
-                        getString(R.string.youtube_player_client_key), "tv_downgraded").apply();
-            }
+            preference.setEntries(new CharSequence[]{entries[1], entries[2]});
+            preference.setEntryValues(new CharSequence[]{values[1], values[2]});
         } else {
-            preference.setEntries(new CharSequence[]{entries[0], entries[1], entries[2]});
-            preference.setEntryValues(new CharSequence[]{values[0], values[1], values[2]});
-            if (!isYoutubePlayerClientAllowed(preference.getValue(),
-                    values[0], values[1], values[2])) {
-                preference.setValue("mweb");
-                defaultPreferences.edit().putString(
-                        getString(R.string.youtube_player_client_key), "mweb").apply();
-            }
+            preference.setEntries(new CharSequence[]{entries[0], entries[2]});
+            preference.setEntryValues(new CharSequence[]{values[0], values[2]});
         }
-    }
-
-    private boolean isYoutubePlayerClientAllowed(final String selected,
-                                                final String... allowedValues) {
-        for (final String value : allowedValues) {
-            if (value.equals(selected)) {
-                return true;
-            }
-        }
-        return false;
+        App.reconcileYoutubePlayerClient(requireContext());
+        preference.setValue(defaultPreferences.getString(
+                getString(R.string.youtube_player_client_key),
+                loggedIn ? "tv_downgraded" : "visionos"));
     }
 
     @Override

@@ -1,18 +1,18 @@
 package org.schabi.newpipe.player;
 
-import static androidx.media3.common.PlaybackException.*;
-import static androidx.media3.common.Player.DISCONTINUITY_REASON_AUTO_TRANSITION;
-import static androidx.media3.common.Player.DISCONTINUITY_REASON_INTERNAL;
-import static androidx.media3.common.Player.DISCONTINUITY_REASON_REMOVE;
-import static androidx.media3.common.Player.DISCONTINUITY_REASON_SEEK;
-import static androidx.media3.common.Player.DISCONTINUITY_REASON_SEEK_ADJUSTMENT;
-import static androidx.media3.common.Player.DISCONTINUITY_REASON_SKIP;
-import static androidx.media3.common.Player.DiscontinuityReason;
-import static androidx.media3.common.Player.Listener;
-import static androidx.media3.common.Player.REPEAT_MODE_ALL;
-import static androidx.media3.common.Player.REPEAT_MODE_OFF;
-import static androidx.media3.common.Player.REPEAT_MODE_ONE;
-import static androidx.media3.common.Player.RepeatMode;
+import static com.google.android.exoplayer2.PlaybackException.*;
+import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_AUTO_TRANSITION;
+import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_INTERNAL;
+import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_REMOVE;
+import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_SEEK;
+import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_SEEK_ADJUSTMENT;
+import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_SKIP;
+import static com.google.android.exoplayer2.Player.DiscontinuityReason;
+import static com.google.android.exoplayer2.Player.Listener;
+import static com.google.android.exoplayer2.Player.REPEAT_MODE_ALL;
+import static com.google.android.exoplayer2.Player.REPEAT_MODE_OFF;
+import static com.google.android.exoplayer2.Player.REPEAT_MODE_ONE;
+import static com.google.android.exoplayer2.Player.RepeatMode;
 import static org.schabi.newpipe.QueueItemMenuUtil.openPopupMenu;
 import static org.schabi.newpipe.extractor.ServiceList.YouTube;
 import static org.schabi.newpipe.extractor.utils.Utils.isNullOrEmpty;
@@ -80,24 +80,22 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import androidx.media3.common.*;
-import androidx.media3.exoplayer.*;
-import androidx.media3.common.Player.PositionInfo;
-import androidx.media3.common.Timeline;
-import androidx.media3.common.Tracks;
-import androidx.media3.exoplayer.source.MediaSource;
-import androidx.media3.common.TrackGroup;
-import androidx.media3.exoplayer.source.TrackGroupArray;
-import androidx.media3.common.text.Cue;
-import androidx.media3.common.text.CueGroup;
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
-import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
-import androidx.media3.ui.AspectRatioFrameLayout;
-import androidx.media3.ui.CaptionStyleCompat;
-import androidx.media3.ui.SubtitleView;
-import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
-import androidx.media3.common.util.Util;
-import androidx.media3.common.VideoSize;
+import com.google.android.exoplayer2.*;
+import com.google.android.exoplayer2.Player.PositionInfo;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.Tracks;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroup;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.text.CueGroup;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
+import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.google.android.exoplayer2.ui.CaptionStyleCompat;
+import com.google.android.exoplayer2.ui.SubtitleView;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.util.Util;
+import com.google.android.exoplayer2.video.VideoSize;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -113,6 +111,7 @@ import org.schabi.newpipe.error.ErrorUtil;
 import org.schabi.newpipe.error.UserAction;
 import org.schabi.newpipe.extractor.*;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
+import org.schabi.newpipe.extractor.services.youtube.sabr.exception.SabrAttestationException;
 import org.schabi.newpipe.extractor.sponsorblock.SponsorBlockAction;
 import org.schabi.newpipe.extractor.sponsorblock.SponsorBlockSegment;
 import org.schabi.newpipe.extractor.stream.*;
@@ -124,18 +123,17 @@ import org.schabi.newpipe.local.dialog.PlaylistDialog;
 import org.schabi.newpipe.local.history.HistoryRecordManager;
 import org.schabi.newpipe.player.PlayerService.PlayerType;
 import org.schabi.newpipe.player.bulletComments.MovieBulletCommentsPlayer;
+import org.schabi.newpipe.player.datasource.SabrLogicException;
 import org.schabi.newpipe.player.event.DisplayPortion;
 import org.schabi.newpipe.player.event.PlayerEventListener;
 import org.schabi.newpipe.player.event.PlayerGestureListener;
 import org.schabi.newpipe.player.event.PlayerServiceEventListener;
 import org.schabi.newpipe.player.helper.AudioReactor;
 import org.schabi.newpipe.player.helper.CustomRenderersFactory;
-import org.schabi.newpipe.player.helper.LegacySubtitleRenderersFactory;
 import org.schabi.newpipe.player.helper.LoadController;
 import org.schabi.newpipe.player.helper.MediaSessionManager;
 import org.schabi.newpipe.player.helper.PlayerDataSource;
 import org.schabi.newpipe.player.helper.PlayerHelper;
-import org.schabi.newpipe.player.datasource.SabrSessionStore;
 import org.schabi.newpipe.player.listeners.view.PlaybackSpeedClickListener;
 import org.schabi.newpipe.player.listeners.view.QualityClickListener;
 import org.schabi.newpipe.player.mediaitem.MediaItemTag;
@@ -268,8 +266,8 @@ public final class Player implements
     private PlayerMediaSession playerMediaSession;
     @Nullable private SurfaceHolderCallback surfaceHolderCallback;
 
-    @NonNull private DefaultTrackSelector trackSelector;
-    @NonNull private LoadController loadController;
+    @NonNull private final DefaultTrackSelector trackSelector;
+    @NonNull private final LoadController loadController;
     @NonNull private final DefaultRenderersFactory renderFactory;
 
     @NonNull private final VideoPlaybackResolver videoResolver;
@@ -314,7 +312,7 @@ public final class Player implements
             updateSabrBackoffCountdown();
             if (currentState == STATE_BLOCKED
                     || (!exoPlayerIsNull() && simpleExoPlayer.getPlaybackState()
-                    == androidx.media3.common.Player.STATE_BUFFERING)) {
+                    == com.google.android.exoplayer2.Player.STATE_BUFFERING)) {
                 sabrBackoffHandler.postDelayed(this, 250L);
             }
         }
@@ -467,8 +465,7 @@ public final class Player implements
         renderFactory = prefs.getBoolean(
                 context.getString(
                         R.string.always_use_exoplayer_set_output_surface_workaround_key), false)
-                ? new CustomRenderersFactory(context)
-                : new LegacySubtitleRenderersFactory(context);
+                ? new CustomRenderersFactory(context) : new DefaultRenderersFactory(context);
 
         if (prefs.getBoolean(context.getString(
                 R.string.disable_exoplayer_media_codec_async_queueing_key), false)) {
@@ -496,8 +493,10 @@ public final class Player implements
 
             @Override
             public int getOverrideResolutionIndex(final List<VideoStream> sortedVideos,
-                                                  final int selectedIndex) {
-                return selectedIndex;
+                                                  final String selectedResolution,
+                                                  @Nullable final String selectedCodec) {
+                return ListHelper.getResolutionAndCodecIndex(
+                        selectedResolution, selectedCodec, sortedVideos);
             }
 
             @Override
@@ -559,9 +558,6 @@ public final class Player implements
         if (DEBUG) {
             Log.d(TAG, "initPlayer() called with: playOnReady = [" + playOnReady + "]");
         }
-
-        trackSelector = createTrackSelector();
-        loadController = new LoadController();
 
         simpleExoPlayer = new ExoPlayer.Builder(context, renderFactory)
                 .setTrackSelector(trackSelector)
@@ -813,6 +809,13 @@ public final class Player implements
                 trackSelector.buildUponParameters();
         parametersBuilder.setTrackTypeDisabled(C.TRACK_TYPE_TEXT, audioPlayerSelected());
         parametersBuilder.setTrackTypeDisabled(C.TRACK_TYPE_VIDEO, audioPlayerSelected());
+        final String preferredAudioLanguage = prefs.getString(
+                context.getString(R.string.preferred_audio_language_key), "original");
+        if ("original".equals(preferredAudioLanguage)) {
+            parametersBuilder.setPreferredAudioLanguages();
+        } else {
+            parametersBuilder.setPreferredAudioLanguages(preferredAudioLanguage);
+        }
         trackSelector.setParameters(parametersBuilder);
 
         // needed for tablets, check the function for a better explanation
@@ -847,7 +850,7 @@ public final class Player implements
             // Player can have state = IDLE when playback is stopped or failed
             // and we should retry in this case
             if (simpleExoPlayer.getPlaybackState()
-                    == androidx.media3.common.Player.STATE_IDLE) {
+                    == com.google.android.exoplayer2.Player.STATE_IDLE) {
                 simpleExoPlayer.prepare();
             }
             if (shouldSeek()) {
@@ -863,7 +866,7 @@ public final class Player implements
             // Player can have state = IDLE when playback is stopped or failed
             // and we should retry in this case
             if (simpleExoPlayer.getPlaybackState()
-                    == androidx.media3.common.Player.STATE_IDLE) {
+                    == com.google.android.exoplayer2.Player.STATE_IDLE) {
                 simpleExoPlayer.prepare();
             }
             simpleExoPlayer.setPlayWhenReady(playWhenReady);
@@ -1130,8 +1133,11 @@ public final class Player implements
     //region Player type specific setup
 
     private void initVideoPlayer() {
-        // restore last resize mode
-        setResizeMode(PlayerHelper.retrieveResizeModeFromPrefs(this));
+        // Pinch zoom owns video scaling while enabled; otherwise restore the regular display mode.
+        setResizeMode(PlayerHelper.isPinchToZoomEnabled(context)
+                ? AspectRatioFrameLayout.RESIZE_MODE_FIT
+                : PlayerHelper.retrieveResizeModeFromPrefs(this));
+        binding.surfaceView.resetPinchScale();
         binding.getRoot().setLayoutParams(new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
     }
@@ -1497,7 +1503,17 @@ public final class Player implements
                             + bitmap.getHeight() + "], from = [" + from + "]");
                 }
 
-                currentThumbnail = bitmap;
+                // Picasso owns the bitmap passed to Targets and may reuse it for other requests.
+                // Keep a player-owned copy because the thumbnail is also retained by the media
+                // session and notification after this callback returns.
+                if (bitmap.isRecycled()) {
+                    Log.w(TAG, "Ignoring a recycled player thumbnail");
+                    currentThumbnail = null;
+                } else {
+                    currentThumbnail = bitmap.copy(
+                            bitmap.getConfig() == null
+                                    ? Bitmap.Config.ARGB_8888 : bitmap.getConfig(), false);
+                }
                 NotificationUtil.getInstance()
                         .createNotificationIfNeededAndUpdate(Player.this, false);
                 // there is a new thumbnail, so changed the end screen thumbnail, too.
@@ -1836,12 +1852,6 @@ public final class Player implements
             return;
         }
 
-        // Feed the real play head to any live SABR session (no-op otherwise).
-        getCurrentStreamInfo().ifPresent(info -> {
-            SabrSessionStore.updatePlayerTime(info.getId(), currentProgress);
-            SabrSessionStore.updatePlaybackRate(info.getId(), getPlaybackSpeed());
-        });
-
         if (duration != binding.playbackSeekBar.getMax()) {
             setVideoDurationToControls(duration);
         }
@@ -1994,7 +2004,8 @@ public final class Player implements
             }
 
             // Do not skip if highlight mode. Do not skip if manual mode + no explicit bypass
-            if (secondaryMode == SponsorBlockSecondaryMode.HIGHLIGHT
+            if (secondaryMode == SponsorBlockSecondaryMode.DISABLED
+                    || secondaryMode == SponsorBlockSecondaryMode.HIGHLIGHT
                     || (secondaryMode == SponsorBlockSecondaryMode.MANUAL
                     && !bypassSecondaryMode)) {
                 return;
@@ -2327,7 +2338,7 @@ public final class Player implements
                     + "reason = [" + reason + "]");
         }
         final int playbackState = exoPlayerIsNull()
-                ? androidx.media3.common.Player.STATE_IDLE
+                ? com.google.android.exoplayer2.Player.STATE_IDLE
                 : simpleExoPlayer.getPlaybackState();
         updatePlaybackState(playWhenReady, playbackState);
     }
@@ -2356,15 +2367,15 @@ public final class Player implements
         }
 
         switch (playbackState) {
-            case androidx.media3.common.Player.STATE_IDLE: // 1
+            case com.google.android.exoplayer2.Player.STATE_IDLE: // 1
                 isPrepared = false;
                 break;
-            case androidx.media3.common.Player.STATE_BUFFERING: // 2
+            case com.google.android.exoplayer2.Player.STATE_BUFFERING: // 2
                 if (isPrepared) {
                     changeState(STATE_BUFFERING);
                 }
                 break;
-            case androidx.media3.common.Player.STATE_READY: //3
+            case com.google.android.exoplayer2.Player.STATE_READY: //3
                 PlaybackStartupTrace.mark(startupTraceId, "player_ready");
                 if (!isPrepared) {
                     isPrepared = true;
@@ -2376,7 +2387,7 @@ public final class Player implements
                             .createNotificationAndStartForeground(this, service.getInstance());
                 }
                 break;
-            case androidx.media3.common.Player.STATE_ENDED: // 4
+            case com.google.android.exoplayer2.Player.STATE_ENDED: // 4
                 changeState(STATE_COMPLETED);
                 saveStreamProgressStateCompleted();
                 isPrepared = false;
@@ -2817,7 +2828,7 @@ public final class Player implements
             return;
         }
         final long remainingMs = SabrBackoffCoordinator.getInstance().getRemainingMs();
-        if (remainingMs <= 0L) {
+        if (!fragmentIsVisible || remainingMs <= 0L) {
             binding.sabrBackoffCountdown.setVisibility(View.GONE);
             return;
         }
@@ -2929,13 +2940,13 @@ public final class Player implements
                                      @RepeatMode final int repeatMode) {
         switch (repeatMode) {
             case REPEAT_MODE_OFF:
-                imageButton.setImageResource(R.drawable.exo_icon_repeat_off);
+                imageButton.setImageResource(R.drawable.exo_controls_repeat_off);
                 break;
             case REPEAT_MODE_ONE:
-                imageButton.setImageResource(R.drawable.exo_icon_repeat_one);
+                imageButton.setImageResource(R.drawable.exo_controls_repeat_one);
                 break;
             case REPEAT_MODE_ALL:
-                imageButton.setImageResource(R.drawable.exo_icon_repeat_all);
+                imageButton.setImageResource(R.drawable.exo_controls_repeat_all);
                 break;
         }
     }
@@ -3023,13 +3034,13 @@ public final class Player implements
      * This is done because not all source resolution errors are {@link PlaybackException}, which
      * are also captured by {@link ExoPlayer} and stops the playback.</p>
      *
-     * @param player The {@link androidx.media3.common.Player} whose state changed.
-     * @param events The {@link androidx.media3.common.Player.Events} that has triggered
+     * @param player The {@link com.google.android.exoplayer2.Player} whose state changed.
+     * @param events The {@link com.google.android.exoplayer2.Player.Events} that has triggered
      *               the player state changes.
      **/
     @Override
-    public void onEvents(@NonNull final androidx.media3.common.Player player,
-                         @NonNull final androidx.media3.common.Player.Events events) {
+    public void onEvents(@NonNull final com.google.android.exoplayer2.Player player,
+                         @NonNull final com.google.android.exoplayer2.Player.Events events) {
         Listener.super.onEvents(player, events);
         MediaItemTag.from(player.getCurrentMediaItem()).ifPresent(tag -> {
             if (tag == currentMetadata) {
@@ -3072,6 +3083,7 @@ public final class Player implements
             enqueueTimer.cancel(true);
         }
         onTextTracksChanged(tracks);
+        onAudioTracksChanged();
     }
 
     @Override
@@ -3139,32 +3151,7 @@ public final class Player implements
 
     @Override
     public void onCues(@NonNull final CueGroup cueGroup) {
-        binding.subtitleView.setCues(normalizeCuePositions(cueGroup.cues));
-    }
-
-    /**
-     * YouTube auto-captions can carry an explicit top line (e.g. line=0.05), so media3 draws them
-     * over the video instead of at the bottom. Drop a top-half fractional line so the SubtitleView
-     * falls back to its default bottom placement; cues that are already low or unpositioned are left
-     * untouched.
-     */
-    private static List<Cue> normalizeCuePositions(@NonNull final List<Cue> cues) {
-        List<Cue> out = null;
-        for (int i = 0; i < cues.size(); i++) {
-            final Cue cue = cues.get(i);
-            final boolean topAnchored = cue.lineType == Cue.LINE_TYPE_FRACTION
-                    && cue.line != Cue.DIMEN_UNSET && cue.line < 0.5f;
-            if (topAnchored) {
-                if (out == null) {
-                    out = new ArrayList<>(cues);
-                }
-                out.set(i, cue.buildUpon()
-                        .setLine(Cue.DIMEN_UNSET, Cue.TYPE_UNSET)
-                        .setLineAnchor(Cue.TYPE_UNSET)
-                        .build());
-            }
-        }
-        return out != null ? out : cues;
+        binding.subtitleView.setCues(cueGroup.cues);
     }
 
     public void onPrepare() {
@@ -3182,7 +3169,7 @@ public final class Player implements
     //region Errors
 
     /**
-     * Process exceptions produced by {@link androidx.media3.exoplayer.ExoPlayer ExoPlayer}.
+     * Process exceptions produced by {@link com.google.android.exoplayer2.ExoPlayer ExoPlayer}.
      * <p>There are multiple types of errors:</p>
      * <ul>
      * <li>{@link PlaybackException#ERROR_CODE_BEHIND_LIVE_WINDOW BEHIND_LIVE_WINDOW}:
@@ -3207,7 +3194,7 @@ public final class Player implements
      * For any error above that is <b>not</b> explicitly <b>catchable</b>, the player will
      * create a notification so users are aware.
      * </ul>
-     * @see androidx.media3.common.Player.Listener#onPlayerError(PlaybackException)
+     * @see com.google.android.exoplayer2.Player.Listener#onPlayerError(PlaybackException)
      * */
     // Any error code not explicitly covered here are either unrelated to NewPipe use case
     // (e.g. DRM) or not recoverable (e.g. Decoder error). In both cases, the player should
@@ -3219,11 +3206,15 @@ public final class Player implements
 
         saveStreamProgressState();
         boolean isCatchableException = false;
-        final boolean sabrSessionInvalidated = error.getCause() != null
-                && error.getCause().getMessage() != null
-                && error.getCause().getMessage().startsWith("SABR session invalidated");
 
-        switch (error.errorCode) {
+        if (containsTerminalSabrException(error)) {
+            // Attestation retries are handled inside the media bridge. An attestation exception
+            // reaching the player has exhausted those recovery paths. SABR logic exceptions
+            // describe broken source invariants, so rebuilding the same source cannot recover.
+            onPlaybackShutdown();
+        } else {
+
+            switch (error.errorCode) {
             case ERROR_CODE_BEHIND_LIVE_WINDOW:
                 isCatchableException = true;
                 simpleExoPlayer.seekToDefaultPosition();
@@ -3268,9 +3259,6 @@ public final class Player implements
             case ERROR_CODE_IO_NETWORK_CONNECTION_FAILED:
             case ERROR_CODE_IO_NETWORK_CONNECTION_TIMEOUT:
             case ERROR_CODE_UNSPECIFIED:
-                if (sabrSessionInvalidated) {
-                    isCatchableException = true;
-                }
                 setRecovery();
                 reloadPlayQueueManager();
                 break;
@@ -3307,6 +3295,7 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
                 // API, remote and renderer errors belong here:
                 onPlaybackShutdown();
                 break;
+            }
         }
 
         if (!isCatchableException) {
@@ -3317,6 +3306,18 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         if (fragmentListener != null) {
             fragmentListener.onPlayerError(error, isCatchableException);
         }
+    }
+
+    private static boolean containsTerminalSabrException(@NonNull final Throwable error) {
+        Throwable current = error;
+        while (current != null) {
+            if (current instanceof SabrAttestationException
+                    || current instanceof SabrLogicException) {
+                return true;
+            }
+            current = current.getCause();
+        }
+        return false;
     }
 
     private void showMediaCodecWorkaroundHint(@NonNull final PlaybackException error) {
@@ -3753,6 +3754,13 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
             Log.d(TAG, "Playback - onMetadataChanged() called, playing: " + info.getName());
         }
 
+        // Zoom belongs to the current video, matching the transient behavior of the official app.
+        resetPinchZoom();
+        if (PlayerHelper.isPinchToZoomEnabled(context)) {
+            forcedAspectRatio = 0.0f;
+            setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+        }
+
         // a forced aspect ratio is a per-video correction, don't carry it over to the next one;
         // it temporarily forced the resize mode to Fit, so restore the persisted resize mode
         if (forcedAspectRatio > 0) {
@@ -4101,10 +4109,13 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
     @Nullable
     public MediaSource sourceOf(final PlayQueueItem item, final StreamInfo info) {
         PlaybackStartupTrace.mark(startupTraceId, "resolver_started");
+        final long initialPositionMs = shouldSeek()
+                && item.getRecoveryPosition() != PlayQueueItem.RECOVERY_UNSET
+                ? item.getRecoveryPosition() : 0;
         final MediaSource resolved;
         if (audioPlayerSelected()) {
             resolved = Optional.ofNullable(audioResolver.resolve(info))
-                    .orElse(videoResolver.resolve(info));
+                    .orElse(videoResolver.resolve(info, initialPositionMs));
             PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
             return resolved;
         }
@@ -4116,7 +4127,7 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
             // audio, we need to use the audio resolver, otherwise the video stream will be played
             // in background.
             resolved = Optional.ofNullable(audioResolver.resolve(info))
-                    .orElse(videoResolver.resolve(info));
+                    .orElse(videoResolver.resolve(info, initialPositionMs));
             PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
             return resolved;
         }
@@ -4128,7 +4139,7 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         // Note that the video is not fetched when the app is in background because the video
         // renderer is fully disabled (see useVideoSource method), except for HLS streams
         // (see https://github.com/google/ExoPlayer/issues/9282).
-        resolved = videoResolver.resolve(info);
+        resolved = videoResolver.resolve(info, initialPositionMs);
         PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
         return resolved;
     }
@@ -4365,7 +4376,7 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
 
             saveStreamProgressState(); //TODO added, check if good
             setRecovery();
-            setSelectedIndex(menuItemIndex);
+            setSelectedStream(availableStreams.get(menuItemIndex));
             reloadPlayQueueManager();
 
             binding.qualityTextView.setText(menuItem.getTitle());
@@ -4407,8 +4418,8 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         isSomePopupMenuVisible = true;
     }
 
-    private void setSelectedIndex(int index) {
-        videoResolver.setSelectedIndex(index);
+    private void setSelectedStream(@NonNull final VideoStream stream) {
+        videoResolver.setSelectedStream(stream);
     }
 
     private void closeAllPopupMenus() {
@@ -4569,6 +4580,18 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         setRecovery();
         videoResolver.setAudioTrack(audioTrackId);
         audioResolver.setAudioTrack(audioTrackId);
+        if (isCurrentStreamSabr() && !exoPlayerIsNull()) {
+            final DefaultTrackSelector.Parameters.Builder parameters =
+                    trackSelector.buildUponParameters();
+            if (audioTrackId == null || audioTrackId.isEmpty()) {
+                parameters.setPreferredAudioLanguages();
+            } else {
+                parameters.setPreferredAudioLanguages(
+                        audioTrackId.split("[._-]", 2)[0]);
+            }
+            trackSelector.setParameters(parameters);
+            return;
+        }
         reloadPlayQueueManager();
     }
 
@@ -4847,7 +4870,9 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
      * resize mode, since selecting an aspect ratio is what the user sees applied.
      */
     private void updateDisplayModeButtonText() {
-        binding.resizeTextView.setText(forcedAspectRatio > 0
+        binding.resizeTextView.setText(PlayerHelper.isPinchToZoomEnabled(context)
+                ? getContext().getString(R.string.resize_pinch)
+                : forcedAspectRatio > 0
                 ? PlayerHelper.aspectRatioNameOf(forcedAspectRatio)
                 : PlayerHelper.resizeTypeOf(context, binding.surfaceView.getResizeMode()));
     }
@@ -4882,7 +4907,8 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         displayModePopupMenu.setOnDismissListener(this);
 
         // a forced aspect ratio takes precedence: when active, no resize mode is the "current" one
-        final boolean ratioActive = forcedAspectRatio > 0;
+        final boolean pinchActive = PlayerHelper.isPinchToZoomEnabled(context);
+        final boolean ratioActive = forcedAspectRatio > 0 && !pinchActive;
         final int currentResizeMode = binding.surfaceView.getResizeMode();
         MenuItem activeItem = null;
 
@@ -4897,11 +4923,22 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
                 onResizeModeSelected(resizeMode);
                 return true;
             });
-            if (!ratioActive && resizeMode == currentResizeMode) {
+            if (!ratioActive && !pinchActive && resizeMode == currentResizeMode) {
                 activeItem = resizeItem;
             }
             order++;
         }
+
+        final MenuItem pinchItem = menu.add(POPUP_MENU_ID_DISPLAY_MODE, order, order,
+                R.string.resize_pinch);
+        pinchItem.setOnMenuItemClickListener(menuItem -> {
+            onPinchModeSelected();
+            return true;
+        });
+        if (pinchActive) {
+            activeItem = pinchItem;
+        }
+        order++;
 
         for (int i = 0; i < PlayerHelper.ASPECT_RATIO_VALUES.length; i++) {
             final float ratio = PlayerHelper.ASPECT_RATIO_VALUES[i];
@@ -4936,6 +4973,8 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
     }
 
     private void onResizeModeSelected(@AspectRatioFrameLayout.ResizeMode final int resizeMode) {
+        PlayerHelper.setPinchToZoomEnabled(context, false);
+        resetPinchZoom();
         // a resize mode supersedes any forced aspect ratio, which would otherwise have no effect
         forcedAspectRatio = 0.0f;
         if (videoNaturalAspectRatio > 0) {
@@ -4946,6 +4985,8 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
     }
 
     private void setForcedAspectRatio(final float aspectRatio) {
+        PlayerHelper.setPinchToZoomEnabled(context, false);
+        resetPinchZoom();
         forcedAspectRatio = aspectRatio;
         // a forced aspect ratio is only meaningful with Fit; this resize mode change is per-video
         // and is intentionally not persisted, so the saved resize mode is restored on the next video
@@ -4955,6 +4996,62 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         if (effectiveRatio > 0) {
             binding.surfaceView.setAspectRatio(effectiveRatio);
         }
+    }
+
+    public boolean isPinchToZoomEnabled() {
+        return isFullscreen && PlayerHelper.isPinchToZoomEnabled(context);
+    }
+
+    private void onPinchModeSelected() {
+        forcedAspectRatio = 0.0f;
+        PlayerHelper.setPinchToZoomEnabled(context, true);
+        if (videoNaturalAspectRatio > 0.0f) {
+            binding.surfaceView.setAspectRatio(videoNaturalAspectRatio);
+        }
+        setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+        resetPinchZoom();
+        updateDisplayModeButtonText();
+        Toast.makeText(context, R.string.pinch_to_zoom_selected, Toast.LENGTH_SHORT).show();
+    }
+
+    private void resetPinchZoom() {
+        binding.surfaceView.resetPinchScale();
+        binding.pinchZoomIndicator.animate().cancel();
+        binding.pinchZoomIndicator.setVisibility(View.GONE);
+    }
+
+    public void onPinchZoomStart(final float focusX, final float focusY) {
+        forcedAspectRatio = 0.0f;
+        if (videoNaturalAspectRatio > 0.0f) {
+            binding.surfaceView.setAspectRatio(videoNaturalAspectRatio);
+        }
+        setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FIT);
+        binding.surfaceView.beginPinchGesture(
+                focusX - binding.surfaceView.getLeft(),
+                focusY - binding.surfaceView.getTop());
+        binding.pinchZoomIndicator.animate().cancel();
+        binding.pinchZoomIndicator.setAlpha(1.0f);
+        binding.pinchZoomIndicator.setText(String.format(Locale.US, "%.1f×",
+                binding.surfaceView.getPinchScale()));
+        binding.pinchZoomIndicator.setVisibility(View.VISIBLE);
+    }
+
+    public void onPinchZoom(final float scaleFactor, final float focusX, final float focusY) {
+        if (!Float.isFinite(scaleFactor)) {
+            return;
+        }
+        binding.surfaceView.setPinchScale(
+                binding.surfaceView.getPinchScale() * scaleFactor,
+                focusX - binding.surfaceView.getLeft(),
+                focusY - binding.surfaceView.getTop());
+        binding.pinchZoomIndicator.setText(String.format(Locale.US, "%.1f×",
+                binding.surfaceView.getPinchScale()));
+    }
+
+    public void onPinchZoomEnd() {
+        binding.pinchZoomIndicator.animate().cancel();
+        binding.pinchZoomIndicator.animate().alpha(0.0f).setStartDelay(250L).setDuration(180L)
+                .withEndAction(() -> binding.pinchZoomIndicator.setVisibility(View.GONE)).start();
     }
 
     private void openCustomAspectRatioDialog() {
@@ -5021,6 +5118,8 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         }
 
         isFullscreen = !isFullscreen;
+        // Pinch zoom is fullscreen-only and never survives either direction of the transition.
+        resetPinchZoom();
         if (!isFullscreen) {
             // Apply window insets because Android will not do it when orientation changes
             // from landscape to portrait (open vertical video to reproduce)
@@ -5192,7 +5291,7 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
                     break;
                 case MINIMIZE_ON_EXIT_MODE_POPUP:
                     setRecovery();
-                    NavigationHelper.playOnPopupPlayer(getParentActivity(), playQueue, true);
+                    NavigationHelper.playOnPopupPlayer(context, playQueue, true);
                     break;
                 case MINIMIZE_ON_EXIT_MODE_NONE: default:
                     pause();
@@ -5283,9 +5382,8 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         final SourceType sourceType = videoResolver.getStreamSourceType().orElse(
                 SourceType.VIDEO_WITH_AUDIO_OR_AUDIO_ONLY);
 
-        // For SABR, a play queue manager reload stops the player and releases the current media
-        // source. Releasing the last SABR source reference also evicts its session, so background /
-        // foreground video toggles must keep the live source and only update track selection.
+        // A SABR source already exposes both audio and video, so background / foreground video
+        // toggles only need to update Media3 track selection instead of rebuilding the source.
         if (!isCurrentStreamSabr()
                 && playQueueManagerReloadingNeeded(sourceType, info, getVideoRendererIndex())) {
             reloadPlayQueueManager();
@@ -5607,7 +5705,7 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         cleanupVideoSurface();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) { // >=API23
-            surfaceHolderCallback = new SurfaceHolderCallback(context, simpleExoPlayer);
+            surfaceHolderCallback = new SurfaceHolderCallback(simpleExoPlayer);
             binding.surfaceView.getHolder().addCallback(surfaceHolderCallback);
             final Surface surface = binding.surfaceView.getHolder().getSurface();
             // ensure player is using an unreleased surface, which the surfaceView might not be
@@ -5628,7 +5726,6 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
             if (binding != null) {
                 binding.surfaceView.getHolder().removeCallback(surfaceHolderCallback);
             }
-            surfaceHolderCallback.release();
             surfaceHolderCallback = null;
         }
     }
@@ -5713,7 +5810,8 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         }
 
         // get pref
-        final String defaultValue = context.getString(R.string.sponsor_block_skip_mode_enabled);
+        final String defaultValue = context.getString(
+                R.string.sponsor_block_skip_mode_automatic_value);
         final String key;
         switch (segment.category) {
             case SPONSOR:
@@ -5737,7 +5835,7 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
                         defaultValue);
                 break;
             case HIGHLIGHT:
-                key = "Highlight Only"; // not a regular "skippable" segment
+                key = context.getString(R.string.sponsor_block_skip_mode_highlight_value);
                 break;
             case SELF_PROMO:
                 key = prefs.getString(
@@ -5764,21 +5862,17 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
                 break;
         }
 
-// map pref to enum
+        // map pref to enum
         final SponsorBlockSecondaryMode pref;
-        switch (key) {
-            case "Automatic":
-                pref = SponsorBlockSecondaryMode.ENABLED;
-                break;
-            case "Manual":
-                pref = SponsorBlockSecondaryMode.MANUAL;
-                break;
-            case "Highlight Only":
-                pref = SponsorBlockSecondaryMode.HIGHLIGHT;
-                break;
-            default:
-                pref = SponsorBlockSecondaryMode.DISABLED;
-                break;
+        if (key.equals(context.getString(R.string.sponsor_block_skip_mode_automatic_value))) {
+            pref = SponsorBlockSecondaryMode.ENABLED;
+        } else if (key.equals(context.getString(R.string.sponsor_block_skip_mode_manual_value))) {
+            pref = SponsorBlockSecondaryMode.MANUAL;
+        } else if (key.equals(context.getString(
+                R.string.sponsor_block_skip_mode_highlight_value))) {
+            pref = SponsorBlockSecondaryMode.HIGHLIGHT;
+        } else {
+            pref = SponsorBlockSecondaryMode.DISABLED;
         }
         if (DEBUG) {
             Log.d("SPONSOR_BLOCK", "Sponsor segment secondary mode: category = ["

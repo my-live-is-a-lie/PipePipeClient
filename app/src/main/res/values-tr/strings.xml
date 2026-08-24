@@ -484,9 +484,9 @@
 <string name="limit_mobile_data_usage_title">Mobil veri kullanırken çözünürlüğü sınırla</string>
 <string-array name="limit_data_usage_description_list">
 <item>@string/limit_data_usage_none_description</item>
-<item>1080p60</item>
+<item>2160p</item>
+<item>1440p</item>
 <item>1080p</item>
-<item>720p60</item>
 <item>720p</item>
 <item>480p</item>
 <item>360p</item>
@@ -925,6 +925,8 @@
 <string name="decoder_init_failure">Kod çözücü başlatma başarısız oldu</string>
 <string name="unable_to_decode_summary">Cihazınız gerekli donanım kod çözücülerinden yoksun, bu yüzden bu videoyu PipePipe\'ta oynatamazsınız.\nLütfen indirin ve VLC\'de oynatın.</string>
 <string name="settings_category_gestures_summary">Jest Ayarları</string>
+<string name="resize_pinch">Sıkıştır</string>
+<string name="pinch_to_zoom_selected">Yakınlaştırmak için sıkıştırın.</string>
 <string name="settings_category_bullet_comments_summary">Kayan Yorum Ayarları</string>
 <string name="settings_category_backup_title">Yedekleme</string>
 <string name="settings_category_advanced_title">Gelişmiş</string>

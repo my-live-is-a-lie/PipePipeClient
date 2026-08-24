@@ -770,7 +770,7 @@
 <string name="sponsor_promote">サポーターになる</string>
 <string name="random_play_order_title">ランダムな順序</string>
 <string name="random_play_order_summary">バックグラウンドで再生する際にローカルプレイリストを自動的にシャッフルします</string>
-<string name="update_log">- YouTube動画情報の読み込みと再生開始速度をさらに改善\n- 特定の条件下でSABRの再生エラーを引き起こす可能性のあるいくつかの問題を修正\n- 一部のケースでWebViewが利用不可として誤って報告される問題を修正\n- 一部のケースでIPアドレスがYouTubeによってブロックされていると誤って報告される問題を修正\n- アプリ全体の安定性を向上</string>
+<string name="update_log">- SABR抽出エンドポイントを一時的に無効化し、抽出エンドポイントをDASHにリセット (YouTube)\n- エラーをスローする代わりに、YouTube Kids動画の360p動画ストリームを取得する回避策を使用 (YouTube)\n- 修正: 一部の動画で高評価数と視聴回数が正しく解析されない問題 (YouTube)\n- 修正: 「チャンネルが利用できません」エラーがズールー語で表示される問題 (YouTube)\n- 修正: プレイリストのアップローダーのユーザー名が正しく解析されない問題 (YouTube)\n- 修正: 一部のチャンネルリンクを直接開けない問題 (YouTube)\n- 修正: チャンネルの動画リストが正しく読み込まれない問題 (NicoNico)\n- 修正: 特定の状況下でアプリがクラッシュする問題\n- 修正: システムがダークモードでない場合、一部のダイアログ/メニューでダークテーマが無視される問題 \n- 修正: SoundCloudのトラックが読み込めない問題\n- 修正: 設定言語が英語以外の場合、手動のSponsorBlockモードが正しく適用されない問題\n- 修正: 登録チャンネルのリストが長すぎる場合、バックグラウンドでの登録チャンネルの更新がシステムによって強制終了される可能性がある問題\n- 期待通りに機能していなかったDNS over HTTPSオプションを削除</string>
 <string name="speeding_playback_title">長時間押は再生速度を速めることができます</string>
 <string name="view_on_github">GitHubで表示</string>
 <string name="donation_dialog_title">プロジェクトをサポートする</string>
@@ -989,8 +989,6 @@
 <string name="export_data_to_newpipe_title">NewPipeへエクスポート</string>
 <string name="export_data_to_newpipe_summary">NewPipe互換形式でバックアップをエクスポート</string>
 <string name="settings_category_other_platforms_title">その他のプラットフォーム</string>
-<string name="use_dns_over_https_fallback_title">DNS over HTTPS フォールバックを使用する</string>
-<string name="use_dns_over_https_fallback_summary">Cloudflare DNS over HTTPS を使用して、失敗したシステム DNS ルックアップを再試行します。これを変更するとアプリが再起動します。</string>
 <string name="youtube_player_client_title">YouTube抽出エンドポイント</string>
 <string name="error_sabr_download_failed">SABRのダウンロードに失敗しました</string>
 <string name="error_sabr_download_format">このSABRフォーマットはダウンロードできません</string>
@@ -1008,4 +1006,28 @@
 <string name="sabr_backoff_notification_content">YouTubeの制限により、再生を続行する前に %1$d 秒待機する必要があります</string>
 <string name="playback_speed_gesture_control_title">スワイプで再生速度を調整</string>
 <string name="playback_speed_gesture_control_summary">中央をスワイプして再生速度を調整します。フルスクリーンのジェスチャー操作は無効になります。</string>
+<string name="remember_search_filters_title">検索フィルターを記憶する</string>
+<string name="remember_search_filters_summary">新しい検索を開始する際に、選択したサービス、コンテンツタイプ、および並べ替えフィルターを復元します。</string>
+<string name="import_subscriptions_title">サブスクリプションのインポート</string>
+<string name="import_subscriptions_summary">以前のJSONエクスポートからサブスクリプションをインポートします</string>
+<string name="export_subscriptions_title">サブスクリプションのエクスポート</string>
+<string name="export_subscriptions_summary">サブスクリプションをJSONファイルにエクスポートします</string>
+<string name="import_youtube_subscriptions_title">YouTubeからインポート</string>
+<string name="import_youtube_subscriptions_summary">Google Takeoutから登録チャンネルをインポート</string>
+<string name="import_soundcloud_subscriptions_title">SoundCloudからインポート</string>
+<string name="import_soundcloud_subscriptions_summary">SoundCloudのプロフィールからサブスクリプションをインポート</string>
+<string name="clear_subscriptions_title">登録チャンネルを消去</string>
+<string name="clear_subscriptions_summary">PipePipeからすべての登録チャンネルを削除します</string>
+<string name="clear_subscriptions_confirmation">すべての登録チャンネルを消去しますか？この操作は元に戻せません。</string>
+<string name="subscriptions_cleared">登録チャンネルを消去しました</string>
+<string name="fetch_subscription_details_title">チャンネルの詳細を取得しますか？</string>
+<string name="fetch_subscription_details_message">チャンネルのサムネイルと登録者数を取得するには、登録している各チャンネルにアクセスする必要があります。所要時間は登録数によって異なり、登録リストが膨大な場合は時間がかかる可能性があります。この手順をスキップした場合でも、手動でチャンネルを開いた際にその詳細は自動的に更新されます。</string>
+<string name="fetch">取得</string>
+<string name="skip">スキップ</string>
+<string name="subscription_details_update_ongoing">チャンネルの詳細を取得中…</string>
+<string name="subscription_details_update_complete">チャンネルの詳細を更新しました</string>
+<string name="subscription_details_update_failed">チャンネルの詳細を更新できませんでした</string>
+<string name="channel_is_blocked">このチャンネルはブロックリストにあります</string>
+<string name="resize_pinch">ピンチ</string>
+<string name="pinch_to_zoom_selected">ピンチしてズームします。</string>
 </resources>

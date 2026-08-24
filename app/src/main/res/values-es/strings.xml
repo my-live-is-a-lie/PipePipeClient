@@ -811,7 +811,7 @@
 <string name="sponsor_promote">Conviértete en un patrocinador</string>
 <string name="random_play_order_title">Orden aleatorio</string>
 <string name="random_play_order_summary">Baraja automáticamente tus listas de reproducción locales cuando se reproduzcan en segundo plano</string>
-<string name="update_log">- Mejorada aún más la velocidad de carga de información y el inicio de reproducción de videos de YouTube\n- Corregidos varios problemas que podían causar errores de reproducción SABR bajo ciertas condiciones\n- Corregido un problema por el que WebView se notificaba incorrectamente como no disponible en algunos casos\n- Corregido un problema por el que las direcciones IP se notificaban incorrectamente como bloqueadas por YouTube en algunos casos\n- Mejorada la estabilidad general de la aplicación</string>
+<string name="update_log">- Deshabilitar temporalmente el endpoint de extracción SABR y restablecer el endpoint de extracción a DASH (YouTube)\n- Usar una solución alternativa para obtener transmisiones de video de 360p para videos de YouTube Kids en lugar de mostrar un error (YouTube)\n- Corrección: Los recuentos de me gusta y vistas no se analizaban correctamente en algunos videos (YouTube)\n- Corrección: El error \"Canal no disponible\" se mostraba en zulú (YouTube)\n- Corrección: El nombre de usuario del creador de la lista de reproducción se analizaba incorrectamente (YouTube)\n- Corrección: Algunos enlaces de canales no se podían abrir directamente (YouTube)\n- Corrección: Las listas de videos del canal no se cargaban correctamente (NicoNico)\n- Corrección: La aplicación se bloqueaba en circunstancias específicas\n- Corrección: Algunos cuadros de diálogo/menús ignoran el tema oscuro si el sistema no está en modo oscuro \n- Corrección: Las pistas de SoundCloud no se cargaban\n- Corrección: Los modos manuales de SponsorBlock no se respetan correctamente si el idioma de configuración no es inglés\n- Corrección: La actualización de suscripciones en segundo plano podría ser cancelada por el sistema si la lista de suscripciones es demasiado larga\n- Eliminar la opción de DNS sobre HTTPS que no funcionaba como se esperaba</string>
 <string name="speeding_playback_title">Mantener presionado para acelerar la reproducción</string>
 <string name="view_on_github">Ver en GitHub</string>
 <string name="donation_dialog_title">Apoya el proyecto</string>
@@ -1022,8 +1022,6 @@
 <string name="export_data_to_newpipe_title">Exportar a NewPipe</string>
 <string name="export_data_to_newpipe_summary">Exportar copia de seguridad en un formato compatible con NewPipe</string>
 <string name="settings_category_other_platforms_title">Otras plataformas</string>
-<string name="use_dns_over_https_fallback_title">Usar DNS sobre HTTPS como respaldo</string>
-<string name="use_dns_over_https_fallback_summary">Reintentar las búsquedas de DNS del sistema fallidas utilizando DNS sobre HTTPS de Cloudflare. Cambiar esto reiniciará la aplicación.</string>
 <string name="youtube_player_client_title">Endpoint de extracción de YouTube</string>
 <string name="error_sabr_download_failed">La descarga de SABR falló</string>
 <string name="error_sabr_download_format">Este formato de SABR no se puede descargar</string>
@@ -1041,4 +1039,28 @@
 <string name="sabr_backoff_notification_content">YouTube nos obliga a esperar %1$d segundos antes de continuar la reproducción</string>
 <string name="playback_speed_gesture_control_title">Desliza para controlar la velocidad de reproducción</string>
 <string name="playback_speed_gesture_control_summary">Desliza en el centro para controlar la velocidad de reproducción. Desactiva el control por gestos en pantalla completa.</string>
+<string name="remember_search_filters_title">Recordar filtros de búsqueda</string>
+<string name="remember_search_filters_summary">Restaurar los filtros seleccionados de servicio, tipo de contenido y orden al iniciar una nueva búsqueda</string>
+<string name="import_subscriptions_title">Importar suscripciones</string>
+<string name="import_subscriptions_summary">Importar suscripciones de una exportación JSON anterior</string>
+<string name="export_subscriptions_title">Exportar suscripciones</string>
+<string name="export_subscriptions_summary">Exportar suscripciones a un archivo JSON</string>
+<string name="import_youtube_subscriptions_title">Importar desde YouTube</string>
+<string name="import_youtube_subscriptions_summary">Importar suscripciones desde Google Takeout</string>
+<string name="import_soundcloud_subscriptions_title">Importar desde SoundCloud</string>
+<string name="import_soundcloud_subscriptions_summary">Importar suscripciones desde un perfil de SoundCloud</string>
+<string name="clear_subscriptions_title">Borrar suscripciones</string>
+<string name="clear_subscriptions_summary">Eliminar todos los canales suscritos de PipePipe</string>
+<string name="clear_subscriptions_confirmation">¿Borrar todas las suscripciones? Esto no se puede deshacer.</string>
+<string name="subscriptions_cleared">Suscripciones borradas</string>
+<string name="fetch_subscription_details_title">¿Obtener detalles del canal?</string>
+<string name="fetch_subscription_details_message">Obtener las miniaturas de los canales y el recuento de suscriptores requiere visitar cada canal suscrito. El tiempo requerido depende del número de suscripciones y puede ser largo para una lista de suscripciones grande. Si omites este paso, los detalles de un canal se actualizarán automáticamente cuando lo abras manualmente.</string>
+<string name="fetch">Obtener</string>
+<string name="skip">Omitir</string>
+<string name="subscription_details_update_ongoing">Obteniendo detalles del canal…</string>
+<string name="subscription_details_update_complete">Detalles del canal actualizados</string>
+<string name="subscription_details_update_failed">No se pudieron actualizar los detalles del canal</string>
+<string name="channel_is_blocked">Este canal está en tu lista de bloqueados</string>
+<string name="resize_pinch">Pellizcar</string>
+<string name="pinch_to_zoom_selected">Pellizcar para hacer zoom.</string>
 </resources>

@@ -8,7 +8,10 @@ import androidx.preference.PreferenceManager;
 
 import org.schabi.newpipe.R;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 public final class PipePipeMigrations {
@@ -33,12 +36,38 @@ public final class PipePipeMigrations {
         }
     };
 
+    public static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        protected void migrate(final Context context, final SharedPreferences preferences) {
+            preferences.edit()
+                    .remove(context.getString(R.string.youtube_player_client_key))
+                    .apply();
+        }
+    };
+
+    public static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        protected void migrate(final Context context, final SharedPreferences preferences) {
+            migrateSponsorBlockModeValues(context, preferences);
+        }
+    };
+
+    public static final Migration MIGRATION_4_5 = new Migration(4, 5) {
+        @Override
+        protected void migrate(final Context context, final SharedPreferences preferences) {
+            migrateHighFrameRateResolutionPreferences(context, preferences);
+        }
+    };
+
     private static final Migration[] PIPEPIPE_MIGRATIONS = {
             MIGRATION_0_1,
             MIGRATION_1_2,
+            MIGRATION_2_3,
+            MIGRATION_3_4,
+            MIGRATION_4_5,
     };
 
-    public static final int VERSION = 2;
+    public static final int VERSION = 5;
 
     public static void initMigrations(final Context context, final boolean isFirstRun) {
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
@@ -176,6 +205,85 @@ public final class PipePipeMigrations {
                 .putBoolean(newKey, preferences.getBoolean(oldKey, true))
                 .remove(oldKey)
                 .apply();
+    }
+
+    private static void migrateSponsorBlockModeValues(
+            final Context context,
+            final SharedPreferences preferences) {
+        final Map<String, String> legacyValues = getLegacySponsorBlockModeValues(context);
+        final int[] preferenceKeys = {
+                R.string.sponsor_block_category_sponsor_mode_key,
+                R.string.sponsor_block_category_intro_mode_key,
+                R.string.sponsor_block_category_outro_mode_key,
+                R.string.sponsor_block_category_interaction_mode_key,
+                R.string.sponsor_block_category_self_promo_mode_key,
+                R.string.sponsor_block_category_non_music_mode_key,
+                R.string.sponsor_block_category_preview_mode_key,
+                R.string.sponsor_block_category_filler_mode_key,
+        };
+        final SharedPreferences.Editor editor = preferences.edit();
+
+        for (final int preferenceKeyId : preferenceKeys) {
+            final String preferenceKey = context.getString(preferenceKeyId);
+            final String oldValue = preferences.getString(preferenceKey, null);
+            final String newValue = legacyValues.get(oldValue);
+            if (newValue != null && !newValue.equals(oldValue)) {
+                editor.putString(preferenceKey, newValue);
+            }
+        }
+
+        editor.apply();
+    }
+
+    private static void migrateHighFrameRateResolutionPreferences(
+            final Context context,
+            final SharedPreferences preferences) {
+        final int[] preferenceKeys = {
+                R.string.default_resolution_key,
+                R.string.default_popup_resolution_key,
+                R.string.limit_mobile_data_usage_key,
+        };
+        final SharedPreferences.Editor editor = preferences.edit();
+
+        for (final int preferenceKeyId : preferenceKeys) {
+            final String preferenceKey = context.getString(preferenceKeyId);
+            final String oldValue = preferences.getString(preferenceKey, null);
+            if (oldValue != null && oldValue.matches("\\d+p60")) {
+                editor.putString(preferenceKey, oldValue.replaceFirst("p60$", "p"));
+            }
+        }
+
+        editor.apply();
+    }
+
+    private static Map<String, String> getLegacySponsorBlockModeValues(final Context context) {
+        final Map<String, String> result = new HashMap<>();
+        addSponsorBlockModeValues(context, result);
+
+        for (final String localeName : context.getAssets().getLocales()) {
+            final String languageTag = localeName.replace("-r", "-").replace('_', '-');
+            final Locale locale = Locale.forLanguageTag(languageTag);
+            if (locale.getLanguage().isEmpty()) {
+                continue;
+            }
+
+            final Configuration configuration =
+                    new Configuration(context.getResources().getConfiguration());
+            configuration.setLocale(locale);
+            addSponsorBlockModeValues(context.createConfigurationContext(configuration), result);
+        }
+
+        return result;
+    }
+
+    private static void addSponsorBlockModeValues(final Context context,
+                                                  final Map<String, String> values) {
+        values.put(context.getString(R.string.sponsor_block_skip_mode_enabled),
+                context.getString(R.string.sponsor_block_skip_mode_automatic_value));
+        values.put(context.getString(R.string.sponsor_block_skip_mode_manual),
+                context.getString(R.string.sponsor_block_skip_mode_manual_value));
+        values.put(context.getString(R.string.sponsor_block_skip_mode_highlight),
+                context.getString(R.string.sponsor_block_skip_mode_highlight_value));
     }
 
     private PipePipeMigrations() { }

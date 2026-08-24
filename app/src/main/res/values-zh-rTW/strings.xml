@@ -803,7 +803,7 @@
 <string name="sponsor_promote">成為支持者</string>
 <string name="random_play_order_title">隨機順序</string>
 <string name="random_play_order_summary">在背景播放時自動隨機播放您的本地播放列表</string>
-<string name="update_log">- 進一步提升 YouTube 影片資訊載入與播放啟動速度\n- 修正特定情況下可能導致 SABR 播放錯誤的數個問題\n- 修正部分情況下 WebView 被錯誤回報為無法使用的問題\n- 修正部分情況下 IP 位址被錯誤回報為遭 YouTube 封鎖的問題\n- 提升應用程式整體穩定性</string>
+<string name="update_log">- 暫時停用 SABR 擷取端點，並將擷取端點重設為 DASH (YouTube)\n- 使用替代方案來取得 YouTube Kids 影片的 360p 影片串流，而非拋出錯誤 (YouTube)\n- 修正：部分影片的按讚數與觀看次數解析不正確 (YouTube)\n- 修正：\"頻道無法使用\" 錯誤顯示為祖魯語 (YouTube)\n- 修正：播放清單上傳者的使用者名稱解析不正確 (YouTube)\n- 修正：部分頻道連結無法直接開啟 (YouTube)\n- 修正：頻道影片清單無法正確載入 (NicoNico)\n- 修正：應用程式在特定情況下會閃退\n- 修正：若系統非深色模式，部分對話方塊/選單會忽略深色主題 \n- 修正：SoundCloud 音軌無法載入\n- 修正：若設定語言非英文，手動 SponsorBlock 模式無法正確套用\n- 修正：若訂閱清單過長，背景訂閱重新整理可能會被系統終止\n- 移除未如預期運作的 DNS over HTTPS 選項</string>
 <string name="speeding_playback_title">按住以加速播放</string>
 <string name="view_on_github">在 GitHub 上查看</string>
 <string name="donation_dialog_title">支持這項計畫</string>
@@ -1020,8 +1020,6 @@
 <string name="export_data_to_newpipe_title">匯出至 NewPipe</string>
 <string name="export_data_to_newpipe_summary">以 NewPipe 相容格式匯出備份</string>
 <string name="settings_category_other_platforms_title">其他平台</string>
-<string name="use_dns_over_https_fallback_title">使用 DNS over HTTPS 備用機制</string>
-<string name="use_dns_over_https_fallback_summary">使用 Cloudflare DNS over HTTPS 重試失敗的系統 DNS 查詢。變更此設定將會重新啟動應用程式。</string>
 <string name="youtube_player_client_title">YouTube 擷取端點</string>
 <string name="error_sabr_download_failed">SABR 下載失敗</string>
 <string name="error_sabr_download_format">無法下載此 SABR 格式</string>
@@ -1039,4 +1037,28 @@
 <string name="sabr_backoff_notification_content">YouTube 強制我們等待 %1$d 秒後才能繼續播放</string>
 <string name="playback_speed_gesture_control_title">滑動以控制播放速度</string>
 <string name="playback_speed_gesture_control_summary">在中間滑動以控制播放速度。會停用全螢幕手勢控制。</string>
+<string name="remember_search_filters_title">記住搜尋篩選器</string>
+<string name="remember_search_filters_summary">開始新搜尋時，還原選取的服務、內容類型與排序篩選器</string>
+<string name="import_subscriptions_title">匯入訂閱</string>
+<string name="import_subscriptions_summary">從先前的 JSON 匯出檔匯入訂閱</string>
+<string name="export_subscriptions_title">匯出訂閱</string>
+<string name="export_subscriptions_summary">將訂閱匯出至 JSON 檔案</string>
+<string name="import_youtube_subscriptions_title">從 YouTube 匯入</string>
+<string name="import_youtube_subscriptions_summary">從 Google Takeout 匯入訂閱</string>
+<string name="import_soundcloud_subscriptions_title">從 SoundCloud 匯入</string>
+<string name="import_soundcloud_subscriptions_summary">從 SoundCloud 個人檔案匯入訂閱</string>
+<string name="clear_subscriptions_title">清除訂閱</string>
+<string name="clear_subscriptions_summary">從 PipePipe 移除所有已訂閱的頻道</string>
+<string name="clear_subscriptions_confirmation">清除所有訂閱？此操作無法復原。</string>
+<string name="subscriptions_cleared">訂閱已清除</string>
+<string name="fetch_subscription_details_title">擷取頻道詳細資訊？</string>
+<string name="fetch_subscription_details_message">擷取頻道縮圖和訂閱人數需要造訪每一個已訂閱的頻道。所需時間取決於訂閱數量，若訂閱清單龐大，可能會需要較長時間。如果您略過此步驟，當您手動開啟頻道時，頻道的詳細資訊仍會自動更新。</string>
+<string name="fetch">擷取</string>
+<string name="skip">略過</string>
+<string name="subscription_details_update_ongoing">正在擷取頻道詳細資訊…</string>
+<string name="subscription_details_update_complete">頻道詳細資訊已更新</string>
+<string name="subscription_details_update_failed">無法更新頻道詳細資訊</string>
+<string name="channel_is_blocked">此頻道在您的封鎖名單中</string>
+<string name="resize_pinch">捏合</string>
+<string name="pinch_to_zoom_selected">雙指捏合以縮放。</string>
 </resources>

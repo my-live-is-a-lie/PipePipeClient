@@ -679,7 +679,7 @@
 <string name="sponsor_promote">Diventa un sostenitore</string>
 <string name="random_play_order_title">Ordine casuale</string>
 <string name="random_play_order_summary">Mescola automaticamente le tue playlist locali quando vengono riprodotte in background</string>
-<string name="update_log">- Migliorata ulteriormente la velocità di caricamento delle informazioni dei video di YouTube e di avvio della riproduzione\n- Risolti diversi problemi che in determinate condizioni potevano causare errori di riproduzione SABR\n- Risolta l\'errata segnalazione di WebView come non disponibile in alcuni casi\n- Risolta l\'errata segnalazione di indirizzi IP bloccati da YouTube in alcuni casi\n- Migliorata la stabilità generale dell\'app</string>
+<string name="update_log">- Disabilita temporaneamente l\'endpoint di estrazione SABR e reimposta l\'endpoint di estrazione su DASH (YouTube)\n- Usa una soluzione alternativa per recuperare i flussi video a 360p per i video di YouTube Kids invece di generare un errore (YouTube)\n- Risolto: I conteggi dei Mi piace e delle visualizzazioni non venivano analizzati correttamente per alcuni video (YouTube)\n- Risolto: L\'errore \"Canale non disponibile\" veniva visualizzato in Zulu (YouTube)\n- Risolto: Il nome utente del caricatore della playlist veniva analizzato in modo errato (YouTube)\n- Risolto: Alcuni link ai canali non potevano essere aperti direttamente (YouTube)\n- Risolto: Gli elenchi dei video del canale non venivano caricati correttamente (NicoNico)\n- Risolto: L\'app si bloccava in circostanze specifiche\n- Risolto: Alcune finestre di dialogo/menu ignorano il tema scuro se il sistema non è scuro \n- Risolto: Le tracce di SoundCloud non venivano caricate\n- Risolto: Le modalità manuali di SponsorBlock non vengono rispettate correttamente se la lingua delle impostazioni non è l\'inglese\n- Risolto: L\'aggiornamento in background delle iscrizioni potrebbe essere interrotto dal sistema se l\'elenco delle iscrizioni è troppo lungo\n- Rimossa l\'opzione DNS over HTTPS che non funzionava come previsto</string>
 <string name="speeding_playback_title">Premi a lungo per aumentare la velocità di riproduzione</string>
 <string name="view_on_github">Visualizza su GitHub</string>
 <string name="donation_dialog_title">Supporta il progetto</string>
@@ -960,8 +960,6 @@
 <string name="export_data_to_newpipe_title">Esporta su NewPipe</string>
 <string name="export_data_to_newpipe_summary">Esporta il backup in un formato compatibile con NewPipe</string>
 <string name="settings_category_other_platforms_title">Altre piattaforme</string>
-<string name="use_dns_over_https_fallback_title">Usa il fallback DNS over HTTPS</string>
-<string name="use_dns_over_https_fallback_summary">Riprova le ricerche DNS di sistema fallite utilizzando Cloudflare DNS over HTTPS. La modifica di questa impostazione riavvierà l\'app.</string>
 <string name="youtube_player_client_title">Endpoint di estrazione YouTube</string>
 <string name="error_sabr_download_failed">Download SABR non riuscito</string>
 <string name="error_sabr_download_format">Questo formato SABR non può essere scaricato</string>
@@ -979,4 +977,28 @@
 <string name="sabr_backoff_notification_content">YouTube ci costringe ad aspettare %1$d secondi prima di continuare la riproduzione</string>
 <string name="playback_speed_gesture_control_title">Scorri per controllare la velocità di riproduzione</string>
 <string name="playback_speed_gesture_control_summary">Scorri al centro per controllare la velocità di riproduzione. Disabilita il controllo dei gesti a schermo intero</string>
+<string name="remember_search_filters_title">Ricorda i filtri di ricerca</string>
+<string name="remember_search_filters_summary">Ripristina il servizio, il tipo di contenuto e i filtri di ordinamento selezionati all\'avvio di una nuova ricerca</string>
+<string name="import_subscriptions_title">Importa iscrizioni</string>
+<string name="import_subscriptions_summary">Importa le iscrizioni da una precedente esportazione JSON</string>
+<string name="export_subscriptions_title">Esporta iscrizioni</string>
+<string name="export_subscriptions_summary">Esporta le iscrizioni in un file JSON</string>
+<string name="import_youtube_subscriptions_title">Importa da YouTube</string>
+<string name="import_youtube_subscriptions_summary">Importa le iscrizioni da Google Takeout</string>
+<string name="import_soundcloud_subscriptions_title">Importa da SoundCloud</string>
+<string name="import_soundcloud_subscriptions_summary">Importa le iscrizioni da un profilo SoundCloud</string>
+<string name="clear_subscriptions_title">Cancella iscrizioni</string>
+<string name="clear_subscriptions_summary">Rimuovi tutti i canali a cui sei iscritto da PipePipe</string>
+<string name="clear_subscriptions_confirmation">Cancellare tutte le iscrizioni? Questa operazione non può essere annullata.</string>
+<string name="subscriptions_cleared">Iscrizioni cancellate</string>
+<string name="fetch_subscription_details_title">Recuperare i dettagli del canale?</string>
+<string name="fetch_subscription_details_message">Il recupero delle miniature dei canali e del numero di iscritti richiede di visitare ciascun canale a cui si è iscritti. Il tempo necessario dipende dal numero di iscrizioni e potrebbe essere lungo per una lista di iscrizioni molto ampia. Se salti questo passaggio, i dettagli di un canale verranno comunque aggiornati automaticamente quando lo apri manualmente.</string>
+<string name="fetch">Recupera</string>
+<string name="skip">Salta</string>
+<string name="subscription_details_update_ongoing">Recupero dei dettagli del canale in corso…</string>
+<string name="subscription_details_update_complete">Dettagli del canale aggiornati</string>
+<string name="subscription_details_update_failed">Impossibile aggiornare i dettagli del canale</string>
+<string name="channel_is_blocked">Questo canale è nella tua lista di blocco</string>
+<string name="resize_pinch">Pizzica</string>
+<string name="pinch_to_zoom_selected">Pizzica per ingrandire.</string>
 </resources>

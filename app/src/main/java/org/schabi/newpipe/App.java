@@ -23,14 +23,12 @@ import org.acra.ACRA;
 import org.acra.config.CoreConfigurationBuilder;
 import org.schabi.newpipe.error.ReCaptchaActivity;
 import org.schabi.newpipe.extractor.NewPipe;
-import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.downloader.Downloader;
 import org.schabi.newpipe.extractor.services.youtube.YoutubeApiDecoder;
-import org.schabi.newpipe.extractor.services.youtube.YoutubeParsingHelper;
 import org.schabi.newpipe.ktx.ExceptionUtils;
-import org.schabi.newpipe.player.datasource.LocalDomPoTokenProvider;
 import org.schabi.newpipe.settings.NewPipeSettings;
 import org.schabi.newpipe.util.*;
+import org.schabi.newpipe.youtube.LocalDomPoTokenProvider;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
@@ -38,7 +36,6 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import io.reactivex.rxjava3.exceptions.CompositeException;
 import io.reactivex.rxjava3.exceptions.MissingBackpressureException;
@@ -71,9 +68,6 @@ import static org.schabi.newpipe.MainActivity.DEBUG;
 public class App extends MultiDexApplication {
     public static final String PACKAGE_NAME = BuildConfig.APPLICATION_ID;
     private static final String TAG = App.class.toString();
-    private static final String YOUTUBE_WEB_CLIENT_NAME = "WEB";
-    private static final String YOUTUBE_MWEB_CLIENT_NAME = "MWEB";
-    private static final String YOUTUBE_ANDROID_VR_CLIENT_NAME = "ANDROID_VR";
     private static App app;
 
     private CarConnectionStateReceiver carConnectionReceiver;
@@ -124,6 +118,9 @@ public class App extends MultiDexApplication {
 
         // Initialize settings first because others inits can use its values
         NewPipeSettings.initSettings(this);
+        // Set this before any activity is created so AppCompat can apply the selected night mode
+        // while attaching the activity's base context.
+        ThemeHelper.setDayNightMode(this);
 
         // Initialize Android Auto component state based on preference
         DeviceUtils.updateAndroidAutoComponentState(this);
@@ -131,9 +128,6 @@ public class App extends MultiDexApplication {
         NewPipe.init(getDownloader(),
             Localization.getPreferredLocalization(this),
             Localization.getPreferredContentCountry(this));
-        final LocalDomPoTokenProvider sessionPoTokenProvider =
-                LocalDomPoTokenProvider.shared(this);
-        NewPipe.setYoutubeSessionPoTokenProvider(sessionPoTokenProvider);
         final AndroidWebViewAvailabilityChecker webViewAvailabilityChecker =
                 new AndroidWebViewAvailabilityChecker(this);
         NewPipe.setWebViewAvailabilityChecker(webViewAvailabilityChecker);
@@ -148,37 +142,12 @@ public class App extends MultiDexApplication {
         initNotificationChannels();
 
         ServiceHelper.initServices(this);
+        LocalDomPoTokenProvider.initialize(this);
+        NewPipe.setYoutubePoTokenResolver(LocalDomPoTokenProvider.INSTANCE::getPlayerPoToken);
 
         // Initialize image loader
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        final String youtubePlayerClientKey = getString(R.string.youtube_player_client_key);
-        final String[] youtubePlayerClients = getResources()
-                .getStringArray(R.array.youtube_player_client_values);
-        final boolean hasYouTubeLogin = !TextUtils.isEmpty(prefs.getString(
-                getString(R.string.youtube_cookies_key), null));
-        final String defaultYoutubePlayerClient = hasYouTubeLogin
-                ? "tv_downgraded" : "mweb";
-        String youtubePlayerClient = prefs.getString(youtubePlayerClientKey,
-                defaultYoutubePlayerClient);
-        boolean isYoutubePlayerClientValid = false;
-        for (final String client : youtubePlayerClients) {
-            if (client.equals(youtubePlayerClient)) {
-                isYoutubePlayerClientValid = true;
-                break;
-            }
-        }
-        if (!isYoutubePlayerClientValid) {
-            youtubePlayerClient = defaultYoutubePlayerClient;
-            prefs.edit().putString(youtubePlayerClientKey, youtubePlayerClient).apply();
-        }
-        if ((hasYouTubeLogin && !"tv_downgraded".equals(youtubePlayerClient)
-                && !"mweb".equals(youtubePlayerClient))
-                || (!hasYouTubeLogin && "tv_downgraded".equals(youtubePlayerClient))) {
-            youtubePlayerClient = defaultYoutubePlayerClient;
-            prefs.edit().putString(youtubePlayerClientKey, youtubePlayerClient).apply();
-        }
-        NewPipe.setYoutubePlayerClient(youtubePlayerClient);
-        prewarmYoutubeSessionPoToken(this);
+        reconcileYoutubePlayerClient(this);
         PicassoHelper.init(this);
         PicassoHelper.setShouldLoadImages(
                 prefs.getBoolean(getString(R.string.download_thumbnail_key), true));
@@ -186,6 +155,25 @@ public class App extends MultiDexApplication {
                 && prefs.getBoolean(getString(R.string.show_image_indicators_key), false));
 
         configureRxJavaErrorHandler();
+    }
+
+    public static void reconcileYoutubePlayerClient(@NonNull final Context context) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final String playerClientKey = context.getString(R.string.youtube_player_client_key);
+        final boolean loggedIn = !TextUtils.isEmpty(prefs.getString(
+                context.getString(R.string.youtube_cookies_key), null));
+        final String defaultClient = loggedIn ? "tv_downgraded" : "visionos";
+        final String selectedClient = prefs.getString(playerClientKey, defaultClient);
+        final boolean allowed = loggedIn
+                ? "tv_downgraded".equals(selectedClient) || "mweb".equals(selectedClient)
+                : "mweb".equals(selectedClient)
+                        || "visionos".equals(selectedClient);
+        final String reconciledClient = allowed ? selectedClient : defaultClient;
+
+        if (!reconciledClient.equals(selectedClient)) {
+            prefs.edit().putString(playerClientKey, reconciledClient).apply();
+        }
+        NewPipe.setYoutubePlayerClient(reconciledClient);
     }
 
     private void scheduleYoutubeDecoderPrewarm(final WebViewJavaScriptDecoder decoder) {
@@ -231,72 +219,6 @@ public class App extends MultiDexApplication {
         });
     }
 
-    public static void prewarmYoutubeSessionPoToken(@NonNull final Context context) {
-        final LocalDomPoTokenProvider provider = LocalDomPoTokenProvider.shared(context);
-        provider.cancelSessionPoTokenPrewarm();
-        try {
-            final YoutubePoTokenClientContext client = resolveYoutubePoTokenClientContext(
-                    NewPipe.getYoutubePlayerClient());
-            if (client == null) {
-                return;
-            }
-            provider.prewarmSessionPoToken(client.clientName, client.userAgent,
-                    YoutubeParsingHelper.getPlayerRequestLocalization(),
-                    ServiceList.YouTube.getContentCountry(), ServiceList.YouTube.hasTokens(),
-                    client.clientVersionResolver);
-        } catch (final RuntimeException e) {
-            Log.w(TAG, "Could not schedule YouTube session PO token prewarm", e);
-        }
-    }
-
-    private static YoutubePoTokenClientContext resolveYoutubePoTokenClientContext(
-            @NonNull final String selectedClient) {
-        switch (selectedClient) {
-            case "mweb":
-                return new YoutubePoTokenClientContext(YOUTUBE_MWEB_CLIENT_NAME,
-                        YoutubeParsingHelper::getClientVersion,
-                        YoutubeParsingHelper.MWEB_USER_AGENT);
-            case "web":
-                return new YoutubePoTokenClientContext(YOUTUBE_WEB_CLIENT_NAME,
-                        YoutubeParsingHelper::getClientVersion,
-                        YoutubeParsingHelper.WEB_USER_AGENT);
-            case "web_safari":
-                return new YoutubePoTokenClientContext(YOUTUBE_WEB_CLIENT_NAME,
-                        () -> "2.20260114.08.00",
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                                + "AppleWebKit/605.1.15 (KHTML, like Gecko) "
-                                + "Version/15.5 Safari/605.1.15,gzip(gfe)");
-            case "android_vr":
-                return new YoutubePoTokenClientContext(YOUTUBE_ANDROID_VR_CLIENT_NAME,
-                        () -> "1.65.10",
-                        "com.google.android.apps.youtube.vr.oculus/1.65.10 "
-                                + "(Linux; U; Android 12L; eureka-user "
-                                + "Build/SQ3A.220605.009.A1) gzip");
-            case "tv_simply":
-                return new YoutubePoTokenClientContext("TVHTML5_SIMPLY", () -> "1.0",
-                        YoutubeParsingHelper.WEB_USER_AGENT);
-            case "tv_downgraded":
-                return new YoutubePoTokenClientContext("TVHTML5", () -> "5.20260114",
-                        "Mozilla/5.0 (ChromiumStylePlatform) Cobalt/Version");
-            default:
-                return null;
-        }
-    }
-
-    private static final class YoutubePoTokenClientContext {
-        @NonNull private final String clientName;
-        @NonNull private final Callable<String> clientVersionResolver;
-        @NonNull private final String userAgent;
-
-        private YoutubePoTokenClientContext(@NonNull final String clientName,
-                                            @NonNull final Callable<String> clientVersionResolver,
-                                            @NonNull final String userAgent) {
-            this.clientName = clientName;
-            this.clientVersionResolver = clientVersionResolver;
-            this.userAgent = userAgent;
-        }
-    }
-
     @Override
     public void onTerminate() {
         super.onTerminate();
@@ -324,9 +246,7 @@ public class App extends MultiDexApplication {
 
 
     protected Downloader getDownloader() {
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        final DownloaderImpl downloader = DownloaderImpl.init(null, prefs.getBoolean(
-                getString(R.string.use_dns_over_https_fallback_key), false));
+        final DownloaderImpl downloader = DownloaderImpl.init(null);
         setCookiesToDownloader(downloader);
         return downloader;
     }

@@ -750,7 +750,7 @@
 <string name="sponsor_promote">Unterstützer werden</string>
 <string name="random_play_order_title">Zufällige Reihenfolge</string>
 <string name="random_play_order_summary">Automatisch Ihre lokalen Wiedergabelisten mischen, wenn sie im Hintergrund abgespielt werden</string>
-<string name="update_log">- Weiter verbesserte Ladegeschwindigkeit von YouTube-Videoinformationen und beim Wiedergabestart\n- Mehrere Probleme behoben, die unter bestimmten Bedingungen zu SABR-Wiedergabefehlern führen konnten\n- Fehler behoben, bei dem WebView in einigen Fällen fälschlicherweise als nicht verfügbar gemeldet wurde\n- Fehler behoben, bei dem IP-Adressen in einigen Fällen fälschlicherweise als von YouTube blockiert gemeldet wurden\n- Allgemeine App-Stabilität verbessert</string>
+<string name="update_log">- SABR-Extraktionsendpunkt vorübergehend deaktiviert und Extraktionsendpunkt auf DASH zurückgesetzt (YouTube)\n- Workaround verwendet, um 360p-Videostreams für YouTube Kids-Videos abzurufen, anstatt einen Fehler auszugeben (YouTube)\n- Fix: Like- und Aufrufzahlen wurden bei einigen Videos nicht korrekt geparst (YouTube)\n- Fix: Fehler \"Kanal nicht verfügbar\" wurde auf Zulu angezeigt (YouTube)\n- Fix: Benutzername des Playlist-Uploaders wurde falsch geparst (YouTube)\n- Fix: Einige Kanallinks konnten nicht direkt geöffnet werden (YouTube)\n- Fix: Kanal-Videolisten wurden nicht korrekt geladen (NicoNico)\n- Fix: App-Abstürze unter bestimmten Umständen\n- Fix: Einige Dialoge/Menüs ignorieren das dunkle Design, wenn das System nicht dunkel ist \n- Fix: SoundCloud-Titel konnten nicht geladen werden\n- Fix: Manuelle SponsorBlock-Modi werden nicht korrekt beachtet, wenn die Einstellungssprache nicht Englisch ist\n- Fix: Die Hintergrundaktualisierung der Abonnements könnte vom System beendet werden, wenn die Abonnementliste zu lang ist\n- DNS-over-HTTPS-Option entfernt, da sie nicht wie erwartet funktionierte</string>
 <string name="speeding_playback_title">Langes Drücken, um die Wiedergabe zu beschleunigen</string>
 <string name="view_on_github">Auf GitHub ansehen</string>
 <string name="donation_dialog_title">Projekt unterstützen</string>
@@ -966,8 +966,6 @@
 <string name="export_data_to_newpipe_title">Nach NewPipe exportieren</string>
 <string name="export_data_to_newpipe_summary">Backup in einem NewPipe-kompatiblen Format exportieren</string>
 <string name="settings_category_other_platforms_title">Andere Plattformen</string>
-<string name="use_dns_over_https_fallback_title">DNS-over-HTTPS-Fallback verwenden</string>
-<string name="use_dns_over_https_fallback_summary">Fehlgeschlagene System-DNS-Abfragen über Cloudflare DNS-over-HTTPS wiederholen. Durch diese Änderung wird die App neu gestartet.</string>
 <string name="youtube_player_client_title">YouTube-Extraktionsendpunkt</string>
 <string name="error_sabr_download_failed">SABR-Download fehlgeschlagen</string>
 <string name="error_sabr_download_format">Dieses SABR-Format kann nicht heruntergeladen werden</string>
@@ -985,4 +983,28 @@
 <string name="sabr_backoff_notification_content">YouTube zwingt uns, %1$d Sekunden zu warten, bevor die Wiedergabe fortgesetzt wird</string>
 <string name="playback_speed_gesture_control_title">Wischen zur Steuerung der Wiedergabegeschwindigkeit</string>
 <string name="playback_speed_gesture_control_summary">In der Mitte wischen, um die Wiedergabegeschwindigkeit zu steuern. Deaktiviert die Vollbild-Gestensteuerung.</string>
+<string name="remember_search_filters_title">Suchfilter merken</string>
+<string name="remember_search_filters_summary">Ausgewählten Dienst, Inhaltstyp und Sortierfilter beim Starten einer neuen Suche wiederherstellen</string>
+<string name="import_subscriptions_title">Abonnements importieren</string>
+<string name="import_subscriptions_summary">Abonnements aus einem vorherigen JSON-Export importieren</string>
+<string name="export_subscriptions_title">Abonnements exportieren</string>
+<string name="export_subscriptions_summary">Abonnements in eine JSON-Datei exportieren</string>
+<string name="import_youtube_subscriptions_title">Von YouTube importieren</string>
+<string name="import_youtube_subscriptions_summary">Abonnements aus Google Takeout importieren</string>
+<string name="import_soundcloud_subscriptions_title">Von SoundCloud importieren</string>
+<string name="import_soundcloud_subscriptions_summary">Abonnements von einem SoundCloud-Profil importieren</string>
+<string name="clear_subscriptions_title">Abonnements löschen</string>
+<string name="clear_subscriptions_summary">Alle abonnierten Kanäle aus PipePipe entfernen</string>
+<string name="clear_subscriptions_confirmation">Alle Abonnements löschen? Dies kann nicht rückgängig gemacht werden.</string>
+<string name="subscriptions_cleared">Abonnements gelöscht</string>
+<string name="fetch_subscription_details_title">Kanaldetails abrufen?</string>
+<string name="fetch_subscription_details_message">Das Abrufen von Kanal-Miniaturansichten und Abonnentenzahlen erfordert den Besuch jedes abonnierten Kanals. Die benötigte Zeit hängt von der Anzahl der Abonnements ab und kann bei einer großen Abonnementliste lange dauern. Wenn Sie diesen Schritt überspringen, werden die Details eines Kanals dennoch automatisch aktualisiert, wenn Sie ihn manuell öffnen.</string>
+<string name="fetch">Abrufen</string>
+<string name="skip">Überspringen</string>
+<string name="subscription_details_update_ongoing">Kanaldetails werden abgerufen…</string>
+<string name="subscription_details_update_complete">Kanaldetails aktualisiert</string>
+<string name="subscription_details_update_failed">Kanaldetails konnten nicht aktualisiert werden</string>
+<string name="channel_is_blocked">Dieser Kanal befindet sich auf deiner Blockierliste</string>
+<string name="resize_pinch">Zusammenziehen</string>
+<string name="pinch_to_zoom_selected">Zum Zoomen zusammenziehen.</string>
 </resources>

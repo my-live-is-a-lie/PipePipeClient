@@ -494,9 +494,9 @@ của YouTube
 <string name="limit_mobile_data_usage_title">Giới hạn độ phân giải khi sử dụng dữ liệu di động</string>
 <string-array name="limit_data_usage_description_list">
 <item>@string/limit_data_usage_none_description</item>
-<item>1080p60</item>
+<item>2160p</item>
+<item>1440p</item>
 <item>1080p</item>
-<item>720p60</item>
 <item>720p</item>
 <item>480p</item>
 <item>360p</item>
@@ -860,7 +860,7 @@ nSự khác biệt giữa hai loại này là cái nào nhanh thường thiếu 
 <string name="sponsor_promote">Trở thành người ủng hộ</string>
 <string name="random_play_order_title">Trình tự ngẫu nhiên</string>
 <string name="random_play_order_summary">Tự động xáo trộn danh sách phát cục bộ của bạn khi phát trong nền</string>
-<string name="update_log">- Tiếp tục cải thiện tốc độ tải thông tin video YouTube và tốc độ khởi động phát\n- Khắc phục một số sự cố có thể gây ra lỗi phát SABR trong một số điều kiện nhất định\n- Khắc phục tình trạng WebView bị báo cáo sai là không khả dụng trong một số trường hợp\n- Khắc phục tình trạng địa chỉ IP bị báo cáo sai là bị YouTube chặn trong một số trường hợp\n- Cải thiện độ ổn định tổng thể của ứng dụng</string>
+<string name="update_log">- Tạm thời vô hiệu hóa điểm cuối trích xuất SABR và đặt lại điểm cuối trích xuất thành DASH (YouTube)\n- Sử dụng giải pháp thay thế để lấy luồng video 360p cho các video YouTube Kids thay vì báo lỗi (YouTube)\n- Sửa lỗi: Số lượt thích và lượt xem không được phân tích cú pháp chính xác cho một số video (YouTube)\n- Sửa lỗi: Lỗi \"Kênh không khả dụng\" được hiển thị bằng tiếng Zulu (YouTube)\n- Sửa lỗi: Tên người dùng tải lên danh sách phát được phân tích cú pháp không chính xác (YouTube)\n- Sửa lỗi: Một số liên kết kênh không thể mở trực tiếp (YouTube)\n- Sửa lỗi: Danh sách video của kênh không tải được chính xác (NicoNico)\n- Sửa lỗi: Ứng dụng bị treo trong một số trường hợp cụ thể\n- Sửa lỗi: Một số hộp thoại/menu bỏ qua giao diện tối nếu hệ thống không ở chế độ tối \n- Sửa lỗi: Không tải được các bản nhạc SoundCloud\n- Sửa lỗi: Các chế độ SponsorBlock thủ công không được tuân thủ chính xác nếu ngôn ngữ cài đặt không phải là tiếng Anh\n- Sửa lỗi: Việc làm mới đăng ký trong nền có thể bị hệ thống buộc dừng nếu danh sách đăng ký quá dài\n- Xóa tùy chọn DNS over HTTPS không hoạt động như mong đợi</string>
 <string name="speeding_playback_title">Nhấn và giữ để tăng tốc độ phát lại</string>
 <string name="view_on_github">Xem trên GitHub</string>
 <string name="donation_dialog_title">Hỗ trợ Dự án</string>
@@ -1075,8 +1075,6 @@ nSự khác biệt giữa hai loại này là cái nào nhanh thường thiếu 
 <string name="export_data_to_newpipe_title">Xuất sang NewPipe</string>
 <string name="export_data_to_newpipe_summary">Xuất bản sao lưu ở định dạng tương thích với NewPipe</string>
 <string name="settings_category_other_platforms_title">Các nền tảng khác</string>
-<string name="use_dns_over_https_fallback_title">Sử dụng DNS dự phòng qua HTTPS</string>
-<string name="use_dns_over_https_fallback_summary">Thử lại các tra cứu DNS hệ thống bị lỗi bằng Cloudflare DNS qua HTTPS. Thay đổi điều này sẽ khởi động lại ứng dụng.</string>
 <string name="youtube_player_client_title">Điểm cuối trích xuất YouTube</string>
 <string name="error_sabr_download_failed">Tải xuống SABR thất bại</string>
 <string name="error_sabr_download_format">Không thể tải xuống định dạng SABR này</string>
@@ -1094,4 +1092,28 @@ nSự khác biệt giữa hai loại này là cái nào nhanh thường thiếu 
 <string name="sabr_backoff_notification_content">YouTube buộc chúng ta phải đợi %1$d giây trước khi tiếp tục phát</string>
 <string name="playback_speed_gesture_control_title">Vuốt để điều khiển tốc độ phát lại</string>
 <string name="playback_speed_gesture_control_summary">Vuốt ở giữa để điều khiển tốc độ phát. Vô hiệu hóa điều khiển bằng cử chỉ toàn màn hình</string>
+<string name="remember_search_filters_title">Ghi nhớ bộ lọc tìm kiếm</string>
+<string name="remember_search_filters_summary">Khôi phục các bộ lọc về dịch vụ, loại nội dung và sắp xếp đã chọn khi bắt đầu một tìm kiếm mới</string>
+<string name="import_subscriptions_title">Nhập đăng ký</string>
+<string name="import_subscriptions_summary">Nhập đăng ký từ bản xuất JSON trước đó</string>
+<string name="export_subscriptions_title">Xuất đăng ký</string>
+<string name="export_subscriptions_summary">Xuất đăng ký sang tệp JSON</string>
+<string name="import_youtube_subscriptions_title">Nhập từ YouTube</string>
+<string name="import_youtube_subscriptions_summary">Nhập các đăng ký từ Google Takeout</string>
+<string name="import_soundcloud_subscriptions_title">Nhập từ SoundCloud</string>
+<string name="import_soundcloud_subscriptions_summary">Nhập các đăng ký từ một hồ sơ SoundCloud</string>
+<string name="clear_subscriptions_title">Xóa đăng ký</string>
+<string name="clear_subscriptions_summary">Xóa tất cả các kênh đã đăng ký khỏi PipePipe</string>
+<string name="clear_subscriptions_confirmation">Xóa tất cả đăng ký? Hành động này không thể hoàn tác.</string>
+<string name="subscriptions_cleared">Đã xóa đăng ký</string>
+<string name="fetch_subscription_details_title">Lấy thông tin chi tiết kênh?</string>
+<string name="fetch_subscription_details_message">Việc tải ảnh thu nhỏ và số lượng người đăng ký của kênh yêu cầu phải truy cập vào từng kênh đã đăng ký. Thời gian thực hiện phụ thuộc vào số lượng kênh đăng ký và có thể kéo dài nếu danh sách đăng ký lớn. Nếu bạn bỏ qua bước này, thông tin chi tiết của kênh vẫn sẽ được cập nhật tự động khi bạn mở thủ công.</string>
+<string name="fetch">Lấy</string>
+<string name="skip">Bỏ qua</string>
+<string name="subscription_details_update_ongoing">Đang lấy thông tin chi tiết kênh…</string>
+<string name="subscription_details_update_complete">Đã cập nhật thông tin chi tiết kênh</string>
+<string name="subscription_details_update_failed">Không thể cập nhật thông tin chi tiết kênh</string>
+<string name="channel_is_blocked">Kênh này nằm trong danh sách chặn của bạn</string>
+<string name="resize_pinch">Chụm</string>
+<string name="pinch_to_zoom_selected">Chụm để thu phóng.</string>
 </resources>

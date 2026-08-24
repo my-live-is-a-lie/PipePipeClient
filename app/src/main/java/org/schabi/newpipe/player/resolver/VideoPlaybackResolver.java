@@ -6,11 +6,11 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import androidx.media3.common.C;
-import androidx.media3.common.MediaItem;
-import androidx.media3.exoplayer.source.MediaSource;
-import androidx.media3.exoplayer.source.MergingMediaSource;
-import androidx.media3.exoplayer.source.SingleSampleMediaSource;
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MergingMediaSource;
+import com.google.android.exoplayer2.source.SingleSampleMediaSource;
 
 import org.schabi.newpipe.extractor.MediaFormat;
 import org.schabi.newpipe.extractor.stream.AudioStream;
@@ -19,7 +19,6 @@ import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.stream.SubtitlesStream;
 import org.schabi.newpipe.extractor.stream.VideoStream;
-import org.schabi.newpipe.player.datasource.SabrSessionStore;
 import org.schabi.newpipe.player.helper.PlayerDataSource;
 import org.schabi.newpipe.player.helper.PlayerHelper;
 import org.schabi.newpipe.player.mediaitem.MediaItemTag;
@@ -32,7 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static androidx.media3.common.C.TIME_UNSET;
+import static com.google.android.exoplayer2.C.TIME_UNSET;
 import static org.schabi.newpipe.util.ListHelper.*;
 
 public class VideoPlaybackResolver implements PlaybackResolver {
@@ -45,7 +44,10 @@ public class VideoPlaybackResolver implements PlaybackResolver {
     private final QualityResolver qualityResolver;
     private SourceType streamSourceType;
 
-    private int selectedIndex = -1;
+    @Nullable
+    private String selectedResolution;
+    @Nullable
+    private String selectedCodec;
     @Nullable
     private String audioTrack;
 
@@ -68,13 +70,17 @@ public class VideoPlaybackResolver implements PlaybackResolver {
     @Override
     @Nullable
     public MediaSource resolve(@NonNull final StreamInfo info) {
+        return resolve(info, 0);
+    }
+
+    @Nullable
+    public MediaSource resolve(@NonNull final StreamInfo info, final long initialPositionMs) {
+        final long normalizedInitialPositionMs = Math.max(0, initialPositionMs);
         final MediaSource liveSource = PlaybackResolver.maybeBuildLiveMediaSource(dataSource, info);
         if (liveSource != null) {
             streamSourceType = SourceType.LIVE_STREAM;
             return liveSource;
         }
-
-        SabrSessionStore.setPreferredAudioTrack(info.getId(), audioTrack);
 
         final List<MediaSource> mediaSources = new ArrayList<>();
         final List<VideoStream> videoStreams = new ArrayList<>(info.getVideoStreams());
@@ -122,13 +128,20 @@ public class VideoPlaybackResolver implements PlaybackResolver {
                 }
             }
         }
-        final int index;
+        int index;
         if (videos.isEmpty()) {
             index = -1;
-        } else if (selectedIndex == -1) {
+        } else if (selectedResolution == null) {
             index = qualityResolver.getDefaultResolutionIndex(videos);
         } else {
-            index = qualityResolver.getOverrideResolutionIndex(videos, selectedIndex);
+            index = qualityResolver.getOverrideResolutionIndex(
+                    videos, selectedResolution, selectedCodec);
+        }
+        if (!videos.isEmpty() && (index < 0 || index >= videos.size())) {
+            index = qualityResolver.getDefaultResolutionIndex(videos);
+            if (index < 0 || index >= videos.size()) {
+                index = 0;
+            }
         }
         final MediaItemTag tag = StreamInfoTag.of(info, videos, index);
         @Nullable final VideoStream video = tag.getMaybeQuality()
@@ -138,7 +151,8 @@ public class VideoPlaybackResolver implements PlaybackResolver {
         if (video != null) {
             try {
                 final MediaSource streamSource = PlaybackResolver.buildMediaSource(
-                        dataSource, video, info, PlayerHelper.cacheKeyOf(info, video), tag);
+                        dataSource, video, info, PlayerHelper.cacheKeyOf(info, video), tag,
+                        normalizedInitialPositionMs);
                 mediaSources.add(streamSource);
             } catch (final IOException e) {
                 if (video.getDeliveryMethod()
@@ -243,12 +257,9 @@ public class VideoPlaybackResolver implements PlaybackResolver {
         return Optional.ofNullable(streamSourceType);
     }
 
-    public int getSelectedIndex() {
-        return selectedIndex;
-    }
-
-    public void setSelectedIndex(int selectedIndex) {
-        this.selectedIndex = selectedIndex;
+    public void setSelectedStream(@NonNull final VideoStream selectedStream) {
+        selectedResolution = selectedStream.getResolution();
+        selectedCodec = selectedStream.getCodec();
     }
 
     public void addBlacklistUrl(@NonNull final String url) {
