@@ -1455,8 +1455,9 @@
     <string name="bilibili_cookies_key">bilibili_cookies_key</string>
     <string name="bullet_comments_font_key">bullet_comments_font_key</string>
     <string name="bullet_comments_opacity_key">bullet_comments_opacity_key</string>
-    <string name="toggle_show_future_items_key">toggle_show_future_items_key</string>
+    <string name="toggle_show_future_items_key">toggle_show_future_items_key</string>    <string name="auto_background_play_key">auto_background_play_key</string>
     <string name="auto_background_play_key">auto_background_play_key</string>
+    <string name="playback_low_audio_quality_key">playback_low_audio_quality_key</string>
     <string name="override_cookies_bilibili_key">override_cookies_bilibili_key</string>
     <string name="override_cookies_niconico_key">override_cookies_niconico_key</string>
     <string name="override_cookies_youtube_key">override_cookies_youtube_key</string>
