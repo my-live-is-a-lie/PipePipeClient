@@ -76,6 +76,14 @@ public class AudioPlaybackResolver implements PlaybackResolver {
         }
 
         final AudioStream audio = audioStreams.get(index);
+        if (Log.isLoggable(TAG, Log.DEBUG)) {
+            final String candidates = audioStreams.stream()
+                    .map(s -> s.getFormat() + "@" + s.getAverageBitrate() + "kbps")
+                    .collect(Collectors.joining(", "));
+            Log.d(TAG, "Background/audio-only playback selected: "
+                    + audio.getFormat() + "@" + audio.getAverageBitrate() + "kbps"
+                    + " (candidates were: " + candidates + ")");
+        }
         final MediaItemTag tag = StreamInfoTag.of(info);
 
         try {
