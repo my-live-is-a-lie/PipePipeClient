@@ -139,6 +139,48 @@ public final class ListHelper {
         return index >= 0 ? index : 0;
     }
 
+    /**
+     * Finds the index of the video stream with the lowest resolution/quality,
+     * used as a fallback when no remembered choice matches the currently available streams.
+     *
+     * @param videoStreams list of the video streams to check
+     * @return index of the lowest quality stream, or -1 if the list is empty
+     */
+    public static int getLowestResolutionIndex(@Nullable final List<VideoStream> videoStreams) {
+        if (videoStreams == null || videoStreams.isEmpty()) {
+            return -1;
+        }
+        int lowestIndex = 0;
+        for (int i = 1; i < videoStreams.size(); i++) {
+            if (compareVideoStreamResolution(videoStreams.get(i), videoStreams.get(lowestIndex))
+                    < 0) {
+                lowestIndex = i;
+            }
+        }
+        return lowestIndex;
+    }
+
+    /**
+     * Finds the index of the audio stream with the lowest bitrate,
+     * used as a fallback when no remembered choice matches the currently available streams.
+     *
+     * @param audioStreams list of the audio streams to check
+     * @return index of the lowest bitrate stream, or -1 if the list is empty
+     */
+    public static int getLowestBitrateAudioIndex(@Nullable final List<AudioStream> audioStreams) {
+        if (audioStreams == null || audioStreams.isEmpty()) {
+            return -1;
+        }
+        int lowestIndex = 0;
+        for (int i = 1; i < audioStreams.size(); i++) {
+            if (compareAudioStreamBitrate(audioStreams.get(i), audioStreams.get(lowestIndex),
+                    AUDIO_FORMAT_EFFICIENCY_RANKING) < 0) {
+                lowestIndex = i;
+            }
+        }
+        return lowestIndex;
+    }
+
     public static int getDefaultAudioFormat(final Context context,
                                             final List<AudioStream> audioStreams) {
         if (audioStreams == null || audioStreams.isEmpty()) {
@@ -293,6 +335,54 @@ public final class ListHelper {
             }
         }
         return getDefaultAudioFormat(context, audioStreams);
+    }
+
+    /**
+     * Finds the audio stream matching a format/bitrate previously chosen by the user in the
+     * download dialog. Stream list positions are not stable between videos, so match by format
+     * and closest bitrate instead.
+     *
+     * @param targetFormat format of the stream selected last time, or {@code null} if unknown
+     * @param targetBitrate average bitrate of the stream selected last time
+     * @param audioStreams streams available for the new video
+     * @return a valid stream index, or -1 if the stream list is empty
+     */
+    public static int getRememberedAudioFormatIndex(
+            @Nullable final MediaFormat targetFormat,
+            final int targetBitrate,
+            @Nullable final List<AudioStream> audioStreams) {
+        if (audioStreams == null || audioStreams.isEmpty()) {
+            return -1;
+        }
+
+        int bestIndex = -1;
+        int bestDiff = Integer.MAX_VALUE;
+        for (int i = 0; i < audioStreams.size(); i++) {
+            final AudioStream stream = audioStreams.get(i);
+            if (targetFormat != null && stream.getFormat() != targetFormat) {
+                continue;
+            }
+            final int diff = Math.abs(stream.getAverageBitrate() - targetBitrate);
+            if (diff < bestDiff) {
+                bestDiff = diff;
+                bestIndex = i;
+            }
+        }
+
+        if (bestIndex >= 0) {
+            return bestIndex;
+        }
+
+        // no stream with the same format was found; fall back to closest bitrate regardless
+        // of format
+        for (int i = 0; i < audioStreams.size(); i++) {
+            final int diff = Math.abs(audioStreams.get(i).getAverageBitrate() - targetBitrate);
+            if (diff < bestDiff) {
+                bestDiff = diff;
+                bestIndex = i;
+            }
+        }
+        return bestIndex;
     }
 
     private static Comparator<AudioStream> getAudioTrackNameComparator() {
