@@ -50,6 +50,7 @@ public class VideoPlaybackResolver implements PlaybackResolver {
     private String selectedCodec;
     @Nullable
     private String audioTrack;
+    private boolean preferLowestAudioBitrate = false;
 
     private List<String> blacklistUrls = new ArrayList<>();
 
@@ -169,9 +170,17 @@ public class VideoPlaybackResolver implements PlaybackResolver {
                 info.getAudioStreams()
                         .stream().filter(s -> !blacklistUrls.contains(s.getContent()))
                         .collect(Collectors.toList()));
-        final int audioIndex = ListHelper.getAudioFormatIndex(context, audioStreams, audioTrack);
+        final int audioIndex = preferLowestAudioBitrate
+                ? getPreferLowestAudioIndex(audioStreams, audioTrack)
+                : ListHelper.getAudioFormatIndex(context, audioStreams, audioTrack);
         final AudioStream audio = audioStreams.isEmpty() || audioIndex == -1
                 ? null : audioStreams.get(audioIndex);
+        if (audio != null) {
+            android.util.Log.i("VideoPlaybackResolver",
+                    (preferLowestAudioBitrate ? "[lowest-audio mode] " : "")
+                            + "Selected audio: " + audio.getFormat() + "@"
+                            + audio.getAverageBitrate() + "kbps");
+        }
 
         // Use the audio stream if there is no video stream, or
         // merge with audio stream in case if video does not contain audio
@@ -277,5 +286,33 @@ public class VideoPlaybackResolver implements PlaybackResolver {
 
     public void setAudioTrack(@Nullable final String audioTrack) {
         this.audioTrack = audioTrack;
+    }
+
+    /**
+     * When {@code true}, {@link #resolve(StreamInfo, long)} picks the lowest-bitrate audio
+     * stream (within the selected {@link #audioTrack}, if any) instead of the user's general
+     * audio quality preference. Used for background / audio-only playback to save data and
+     * battery.
+     */
+    public void setPreferLowestAudioBitrate(final boolean preferLowestAudioBitrate) {
+        this.preferLowestAudioBitrate = preferLowestAudioBitrate;
+    }
+
+    public boolean isPreferLowestAudioBitrate() {
+        return preferLowestAudioBitrate;
+    }
+
+    private static int getPreferLowestAudioIndex(
+            @NonNull final List<AudioStream> audioStreams, @Nullable final String audioTrack) {
+        if (audioTrack != null) {
+            final List<AudioStream> trackStreams = audioStreams.stream()
+                    .filter(s -> audioTrack.equals(s.getAudioTrackId()))
+                    .collect(Collectors.toList());
+            final int lowestInTrack = ListHelper.getLowestBitrateAudioIndex(trackStreams);
+            if (lowestInTrack >= 0) {
+                return audioStreams.indexOf(trackStreams.get(lowestInTrack));
+            }
+        }
+        return ListHelper.getLowestBitrateAudioIndex(audioStreams);
     }
 }
