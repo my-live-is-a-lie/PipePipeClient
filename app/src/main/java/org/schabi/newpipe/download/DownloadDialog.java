@@ -165,7 +165,7 @@ public class DownloadDialog extends DialogFragment
                 .filterVideoStreamsByPreferredLanguage(context, streamsList,
                         info.getAudioStreams());
 
-        final int selectedStreamIndex = ListHelper.getDefaultResolutionIndex(
+        final int selectedStreamIndex = getRememberedOrLowestVideoIndex(
                 context, filteredVideoStreams);
         HlsDownloadStreamHelper.addManifestFallbackIfNeeded(filteredVideoStreams, info);
 
@@ -177,9 +177,74 @@ public class DownloadDialog extends DialogFragment
         instance.setVideoStreams(filteredVideoStreams);
         instance.setSelectedVideoStream(selectedStreamIndex >= 0 ? selectedStreamIndex : 0);
         instance.setAudioStreams(downloadableAudio);
+        instance.setSelectedAudioStream(getRememberedOrLowestAudioIndex(context, downloadableAudio));
         instance.setSubtitleStreams(info.getSubtitles());
 
         return instance;
+    }
+
+    /**
+     * Picks the video quality the user chose in their last download, matched by resolution and
+     * codec family against the streams available for this video. If no matching quality was
+     * saved yet, or the saved quality is no longer offered, falls back to the lowest available
+     * quality rather than the highest, per user preference.
+     */
+    private static int getRememberedOrLowestVideoIndex(
+            final Context context, final List<VideoStream> videoStreams) {
+        if (videoStreams == null || videoStreams.isEmpty()) {
+            return -1;
+        }
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final String lastResolution = prefs.getString(
+                context.getString(R.string.last_download_video_resolution_key), null);
+
+        if (lastResolution != null) {
+            final String lastCodec = prefs.getString(
+                    context.getString(R.string.last_download_video_codec_key), null);
+            final int matchedIndex = ListHelper.getResolutionAndCodecIndex(
+                    lastResolution, lastCodec, videoStreams);
+            if (matchedIndex >= 0) {
+                return matchedIndex;
+            }
+        }
+
+        return ListHelper.getLowestResolutionIndex(videoStreams);
+    }
+
+    /**
+     * Picks the audio quality the user chose in their last download, matched by format and
+     * bitrate against the streams available for this video. If no matching quality was saved
+     * yet, or the saved quality is no longer offered, falls back to the lowest available
+     * quality rather than the highest, per user preference.
+     */
+    private static int getRememberedOrLowestAudioIndex(
+            final Context context, final List<AudioStream> audioStreams) {
+        if (audioStreams == null || audioStreams.isEmpty()) {
+            return -1;
+        }
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        final String lastFormatName = prefs.getString(
+                context.getString(R.string.last_download_audio_format_key), null);
+
+        if (lastFormatName != null) {
+            MediaFormat lastFormat = null;
+            try {
+                lastFormat = MediaFormat.valueOf(lastFormatName);
+            } catch (final IllegalArgumentException ignored) {
+                // saved format no longer exists/recognised; ignore and fall through
+            }
+            final int lastBitrate = prefs.getInt(
+                    context.getString(R.string.last_download_audio_bitrate_key), 0);
+            final int matchedIndex = ListHelper.getRememberedAudioFormatIndex(
+                    lastFormat, lastBitrate, audioStreams);
+            if (matchedIndex >= 0) {
+                return matchedIndex;
+            }
+        }
+
+        return ListHelper.getLowestBitrateAudioIndex(audioStreams);
     }
 
 
@@ -330,8 +395,9 @@ public class DownloadDialog extends DialogFragment
 
         dialogBinding.fileName.setText(FilenameUtils.createFilename(getContext(),
                 currentInfo.getName()));
-        selectedAudioIndex = ListHelper
-                .getDefaultAudioFormat(getContext(), wrappedAudioStreams.getStreamsList());
+        // selectedAudioIndex was already set in newInstance() to either the last remembered
+        // download quality or, as a fallback, the lowest available quality. Don't overwrite it
+        // here with the (unrelated) playback-language default.
 
         selectedSubtitleIndex = getSubtitleIndexBy(subtitleStreamsAdapter.getAll());
 
@@ -436,7 +502,6 @@ public class DownloadDialog extends DialogFragment
         wrappedVideoStreams = (StreamSizeWrapper<VideoStream>) savedObjects.poll();
         wrappedSubtitleStreams = (StreamSizeWrapper<SubtitlesStream>) savedObjects.poll();
     }
-
 
     /*//////////////////////////////////////////////////////////////////////////
     // Video, audio and subtitle spinners
@@ -1016,6 +1081,38 @@ public class DownloadDialog extends DialogFragment
         askDialog.create().show();
     }
 
+    /**
+     * Saves the resolution and codec of the video quality just chosen, so it can be reapplied
+     * as the default the next time a download is started.
+     */
+    private void rememberSelectedVideoQuality(@Nullable final VideoStream stream) {
+        if (stream == null || context == null) {
+            return;
+        }
+        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                .putString(getString(R.string.last_download_video_resolution_key),
+                        stream.getResolution())
+                .putString(getString(R.string.last_download_video_codec_key),
+                        stream.getCodec())
+                .apply();
+    }
+
+    /**
+     * Saves the format and bitrate of the audio quality just chosen, so it can be reapplied
+     * as the default the next time a download is started.
+     */
+    private void rememberSelectedAudioQuality(@Nullable final AudioStream stream) {
+        if (stream == null || context == null) {
+            return;
+        }
+        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                .putString(getString(R.string.last_download_audio_format_key),
+                        stream.getFormat() == null ? null : stream.getFormat().name())
+                .putInt(getString(R.string.last_download_audio_bitrate_key),
+                        stream.getAverageBitrate())
+                .apply();
+    }
+
     private void continueSelectedDownload(@NonNull final StoredFileHelper storage) {
         if (!storage.canWrite()) {
             showFailedDialog(R.string.permission_denied);
@@ -1051,6 +1148,7 @@ public class DownloadDialog extends DialogFragment
         if (checkedId3 == R.id.audio_button) {
             kind = 'a';
             selectedStream = audioStreamsAdapter.getItem(selectedAudioIndex);
+            rememberSelectedAudioQuality((AudioStream) selectedStream);
             if (currentInfo.getService() == ServiceList.NicoNico) {
                 psName = Postprocessing.NICONICO_MUXER;
             } else if (selectedStream.getFormat() == MediaFormat.M4A && currentInfo.getService() != ServiceList.BiliBili) {
@@ -1061,6 +1159,7 @@ public class DownloadDialog extends DialogFragment
         } else if (checkedId3 == R.id.video_button) {
             kind = 'v';
             selectedStream = videoStreamsAdapter.getItem(selectedVideoIndex);
+            rememberSelectedVideoQuality((VideoStream) selectedStream);
 
             final SecondaryStreamHelper<AudioStream> secondary = videoStreamsAdapter
                     .getAllSecondary()
