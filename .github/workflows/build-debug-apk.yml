@@ -37,7 +37,7 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Build debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace --no-configuration-cache
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
