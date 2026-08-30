@@ -166,10 +166,15 @@ public class VideoPlaybackResolver implements PlaybackResolver {
         }
 
         // Create optional audio stream source
-        final List<AudioStream> audioStreams = ListHelper.getFilteredAudioStreams(context,
-                info.getAudioStreams()
-                        .stream().filter(s -> !blacklistUrls.contains(s.getContent()))
-                        .collect(Collectors.toList()));
+        // Note: ListHelper.getFilteredAudioStreams() collapses each audio track down to only
+        // its single highest-bitrate stream, so it can never be used to find the lowest bitrate.
+        // When preferLowestAudioBitrate is set, search the raw stream list instead.
+        final List<AudioStream> rawAudioStreams = info.getAudioStreams()
+                .stream().filter(s -> !blacklistUrls.contains(s.getContent()))
+                .collect(Collectors.toList());
+        final List<AudioStream> audioStreams = preferLowestAudioBitrate
+                ? ListHelper.getAllPlayableAudioStreams(rawAudioStreams)
+                : ListHelper.getFilteredAudioStreams(context, rawAudioStreams);
         final int audioIndex = preferLowestAudioBitrate
                 ? getPreferLowestAudioIndex(audioStreams, audioTrack)
                 : ListHelper.getAudioFormatIndex(context, audioStreams, audioTrack);
