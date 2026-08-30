@@ -286,6 +286,32 @@ public final class ListHelper {
         return matchedStreams.isEmpty() ? audioStreams : matchedStreams;
     }
 
+    /**
+     * Like {@link #getFilteredAudioStreams(Context, List)}, but keeps every bitrate variant of
+     * each audio track instead of collapsing each track down to just its highest-bitrate stream.
+     * Use this when the lowest bitrate is wanted (getFilteredAudioStreams always discards lower
+     * bitrates, so it can never be used to find them).
+     *
+     * @param audioStreams streams to filter
+     * @return every playable audio stream, still grouped by track but with no bitrate discarded
+     */
+    public static List<AudioStream> getAllPlayableAudioStreams(
+            @Nullable final List<AudioStream> audioStreams) {
+        if (audioStreams == null) {
+            return Collections.emptyList();
+        }
+        final List<AudioStream> result = new ArrayList<>();
+        for (final AudioStream stream : audioStreams) {
+            if (stream.getDeliveryMethod() == DeliveryMethod.TORRENT
+                    || (stream.getDeliveryMethod() == DeliveryMethod.HLS
+                    && stream.getFormat() == MediaFormat.OPUS)) {
+                continue;
+            }
+            result.add(stream);
+        }
+        return result;
+    }
+
     public static List<AudioStream> getFilteredAudioStreams(
             @NonNull final Context context,
             @Nullable final List<AudioStream> audioStreams) {
