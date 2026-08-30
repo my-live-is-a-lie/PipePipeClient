@@ -4114,8 +4114,10 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
                 ? item.getRecoveryPosition() : 0;
         final MediaSource resolved;
         if (audioPlayerSelected()) {
+            videoResolver.setPreferLowestAudioBitrate(true);
             resolved = Optional.ofNullable(audioResolver.resolve(info))
                     .orElse(videoResolver.resolve(info, initialPositionMs));
+            videoResolver.setPreferLowestAudioBitrate(false);
             PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
             return resolved;
         }
@@ -4126,8 +4128,10 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
             // If the current info has only video streams with audio and if the stream is played as
             // audio, we need to use the audio resolver, otherwise the video stream will be played
             // in background.
+            videoResolver.setPreferLowestAudioBitrate(true);
             resolved = Optional.ofNullable(audioResolver.resolve(info))
                     .orElse(videoResolver.resolve(info, initialPositionMs));
+            videoResolver.setPreferLowestAudioBitrate(false);
             PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
             return resolved;
         }
@@ -4139,7 +4143,12 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         // Note that the video is not fetched when the app is in background because the video
         // renderer is fully disabled (see useVideoSource method), except for HLS streams
         // (see https://github.com/google/ExoPlayer/issues/9282).
+        // This branch is also used for ordinary foreground video playback (isAudioOnly false),
+        // so only switch to the lowest-bitrate audio when actually playing audio-only/in
+        // background - never for normal foreground video.
+        videoResolver.setPreferLowestAudioBitrate(isAudioOnly);
         resolved = videoResolver.resolve(info, initialPositionMs);
+        videoResolver.setPreferLowestAudioBitrate(false);
         PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
         return resolved;
     }
