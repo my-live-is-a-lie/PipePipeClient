@@ -4146,7 +4146,7 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         // This branch is also used for ordinary foreground video playback (isAudioOnly false),
         // so only switch to the lowest-bitrate audio when actually playing audio-only/in
         // background - never for normal foreground video.
-        videoResolver.setPreferLowestAudioBitrate(isAudioOnly);
+        videoResolver.setPreferLowestAudioBitrate(true);
         resolved = videoResolver.resolve(info, initialPositionMs);
         videoResolver.setPreferLowestAudioBitrate(false);
         PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
