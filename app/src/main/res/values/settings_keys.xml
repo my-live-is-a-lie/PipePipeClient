@@ -387,6 +387,13 @@
     <string name="last_download_type_video_key">last_dl_type_video</string>
     <string name="last_download_type_audio_key">last_dl_type_audio</string>
     <string name="last_download_type_subtitle_key">last_dl_type_subtitle</string>
+    <!-- Remembers the exact quality chosen in the download dialog last time, so it can be
+         reapplied on the next download. Falls back to the lowest quality when no match is
+         found (e.g. first ever download, or the remembered quality isn't offered anymore). -->
+    <string name="last_download_video_resolution_key">last_dl_video_resolution</string>
+    <string name="last_download_video_codec_key">last_dl_video_codec</string>
+    <string name="last_download_audio_format_key">last_dl_audio_format</string>
+    <string name="last_download_audio_bitrate_key">last_dl_audio_bitrate</string>
 
     <string name="downloads_storage_ask">downloads_storage_ask</string>
     <string name="storage_use_saf">storage_use_saf</string>
