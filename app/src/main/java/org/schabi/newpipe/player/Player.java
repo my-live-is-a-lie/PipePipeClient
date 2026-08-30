@@ -4143,10 +4143,12 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         // Note that the video is not fetched when the app is in background because the video
         // renderer is fully disabled (see useVideoSource method), except for HLS streams
         // (see https://github.com/google/ExoPlayer/issues/9282).
-        // This branch is also used for ordinary foreground video playback (isAudioOnly false),
-        // so only switch to the lowest-bitrate audio when actually playing audio-only/in
-        // background - never for normal foreground video.
-        videoResolver.setPreferLowestAudioBitrate(true);
+        // This branch is also used for ordinary foreground video playback. Whether it also uses
+        // the lowest audio bitrate (vs. only in background/audio-only) is user-configurable via
+        // the "Playback low audio quality" setting.
+        final boolean alwaysUseLowAudioQuality = prefs.getBoolean(
+                context.getString(R.string.playback_low_audio_quality_key), false);
+        videoResolver.setPreferLowestAudioBitrate(alwaysUseLowAudioQuality || isAudioOnly);
         resolved = videoResolver.resolve(info, initialPositionMs);
         videoResolver.setPreferLowestAudioBitrate(false);
         PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
