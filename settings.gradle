@@ -36,4 +36,20 @@ rootProject.name = "PipePipe"
 include ':app'
 include ':ffmpeg'
 
-includeBuild('../PipePipeExtractor')
+// PipePipeExtractor has no published/versioned releases on JitPack, so the dependency
+// declared in app/build.gradle (an unversioned JitPack coordinate) cannot resolve on its
+// own. This project instead builds the extractor from source.
+//
+// By default this expects PipePipeExtractor checked out as a true sibling folder next to
+// this repo (for local development):
+//   parent-folder/
+//     PipePipeClient/   <- this repo
+//     PipePipeExtractor/
+// git clone https://github.com/InfinityLoop1308/PipePipeExtractor.git ../PipePipeExtractor
+//
+// GitHub Actions' checkout action cannot check out to a true sibling folder outside the
+// workspace, so the CI workflow (.github/workflows/build-debug-apk.yml) checks it out into
+// a subfolder of this same workspace instead, and passes its location via the
+// PIPEPIPE_EXTRACTOR_PATH environment variable.
+def extractorPath = System.getenv('PIPEPIPE_EXTRACTOR_PATH') ?: '../PipePipeExtractor'
+includeBuild(extractorPath)
