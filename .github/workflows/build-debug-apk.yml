@@ -15,6 +15,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # PipePipeExtractor has no published/versioned releases, so it must be built from
+      # source. settings.gradle expects it as a sibling folder via includeBuild('../PipePipeExtractor').
+      # actions/checkout's "path" input is resolved relative to the parent of the default
+      # workspace, so "../PipePipeExtractor" here lands exactly next to this checkout,
+      # matching what settings.gradle expects.
+      - name: Checkout PipePipeExtractor (sibling build dependency)
+        uses: actions/checkout@v4
+        with:
+          repository: InfinityLoop1308/PipePipeExtractor
+          path: ../PipePipeExtractor
+
       # The project targets Java 25 (see app/build.gradle). GitHub's
       # setup-java action can fetch this via the Temurin distribution.
       - name: Set up JDK 25
