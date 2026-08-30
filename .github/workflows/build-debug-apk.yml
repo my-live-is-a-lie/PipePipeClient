@@ -1,0 +1,47 @@
+name: Build debug APK
+
+# Runs automatically on every push to these branches, and can also be
+# triggered manually from the Actions tab (workflow_dispatch).
+on:
+  push:
+    branches: [ "dev", "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # The project targets Java 25 (see app/build.gradle). GitHub's
+      # setup-java action can fetch this via the Temurin distribution.
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipepipe-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
