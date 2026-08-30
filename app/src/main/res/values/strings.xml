@@ -854,6 +854,8 @@
 <string name="bullet_comments_font_title">Font of bullet comments</string>
 <string name="auto_background_play_title">Music Player Mode</string>
 <string name="auto_background_play_summary">Play in background automatically when clicking an item in a local playlist</string>
+<string name="playback_low_audio_quality_title">Playback low audio quality</string>
+<string name="playback_low_audio_quality_summary">Always use the lowest available audio quality during playback, including when watching video in the foreground. When disabled, low audio quality is only used for background/audio-only playback.</string>
 <string name="download_all">Download all</string>
 <string name="download_all_message">Please make sure you have selected the download folder and granted access, otherwise download will fail. Existed files will not be overwritten. If audio can not be downloaded separately, the corresponding video will be downloaded.</string>
 <string name="import_urls_from_file">Import URLs from file</string>
