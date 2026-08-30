@@ -41,7 +41,9 @@ android {
         abi {
             reset()
             enable true
-            include "armeabi-v7a", "arm64-v8a", "x86_64", "x86"
+            // Only building for arm64-v8a (64-bit ARM) devices; this cuts build time and
+            // produces a single APK instead of one per architecture.
+            include "arm64-v8a"
         }
     }
 
