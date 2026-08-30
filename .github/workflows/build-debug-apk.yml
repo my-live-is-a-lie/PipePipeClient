@@ -16,15 +16,14 @@ jobs:
         uses: actions/checkout@v4
 
       # PipePipeExtractor has no published/versioned releases, so it must be built from
-      # source. settings.gradle expects it as a sibling folder via includeBuild('../PipePipeExtractor').
-      # actions/checkout's "path" input is resolved relative to the parent of the default
-      # workspace, so "../PipePipeExtractor" here lands exactly next to this checkout,
-      # matching what settings.gradle expects.
-      - name: Checkout PipePipeExtractor (sibling build dependency)
+      # source. actions/checkout cannot place a checkout outside the workspace (a true
+      # sibling folder), so it's checked out into a subfolder of this workspace instead;
+      # settings.gradle is told where to find it via PIPEPIPE_EXTRACTOR_PATH below.
+      - name: Checkout PipePipeExtractor (build dependency)
         uses: actions/checkout@v4
         with:
           repository: InfinityLoop1308/PipePipeExtractor
-          path: ../PipePipeExtractor
+          path: extractor-src
 
       # The project targets Java 25 (see app/build.gradle). GitHub's
       # setup-java action can fetch this via the Temurin distribution.
@@ -48,6 +47,8 @@ jobs:
             gradle-${{ runner.os }}-
 
       - name: Build debug APK
+        env:
+          PIPEPIPE_EXTRACTOR_PATH: extractor-src
         run: ./gradlew assembleDebug --stacktrace --no-configuration-cache
 
       - name: Upload APK artifact
