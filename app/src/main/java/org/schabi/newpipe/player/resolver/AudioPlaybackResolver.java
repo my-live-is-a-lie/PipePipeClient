@@ -54,7 +54,23 @@ public class AudioPlaybackResolver implements PlaybackResolver {
         removeTorrentStreams(audioStreams);
         audioStreams = filterUnsupportedFormats(audioStreams, context);
 
-        final int index = ListHelper.getAudioFormatIndex(context, audioStreams, audioTrack);
+        // Audio-only / background playback always uses the lowest available bitrate to save
+        // data and battery, regardless of the user's general quality preference. If a specific
+        // audio track was requested, still honor the track choice but pick its lowest bitrate.
+        final int index;
+        if (audioTrack != null) {
+            final List<AudioStream> trackStreams = audioStreams.stream()
+                    .filter(s -> audioTrack.equals(s.getAudioTrackId()))
+                    .collect(Collectors.toList());
+            final int lowestInTrack = ListHelper.getLowestBitrateAudioIndex(trackStreams);
+            if (lowestInTrack >= 0) {
+                index = audioStreams.indexOf(trackStreams.get(lowestInTrack));
+            } else {
+                index = ListHelper.getLowestBitrateAudioIndex(audioStreams);
+            }
+        } else {
+            index = ListHelper.getLowestBitrateAudioIndex(audioStreams);
+        }
         if (index < 0 || index >= audioStreams.size()) {
             return null;
         }
