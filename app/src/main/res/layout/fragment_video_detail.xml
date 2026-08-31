@@ -177,6 +177,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginEnd="30dp"
+                        android:background="?attr/selectableItemBackground"
                         android:ellipsize="end"
                         android:maxLines="1"
                         android:paddingTop="12dp"
