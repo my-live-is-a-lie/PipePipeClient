@@ -598,7 +598,8 @@ public final class VideoDetailFragment
                 player.setRecovery();
             }
             openVideoPlayerAutoFullscreen();
-        } else if (id == R.id.detail_toggle_secondary_controls_view) {
+        } else if (id == R.id.detail_video_title_view
+                || id == R.id.detail_toggle_secondary_controls_view) {
             toggleTitleAndSecondaryControls();
         } else if (id == R.id.overlay_thumbnail || id == R.id.overlay_metadata_layout || id == R.id.overlay_buttons_layout) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
