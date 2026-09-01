@@ -764,8 +764,6 @@ public final class VideoDetailFragment
     protected void initListeners() {
         super.initListeners();
 
-        binding.detailVideoTitleView.setOnClickListener(this);
-        binding.detailVideoTitleView.setOnLongClickListener(this);
         binding.detailTitleRootLayout.setOnClickListener(this);
         binding.detailTitleRootLayout.setOnLongClickListener(this);
         binding.detailToggleSecondaryControlsView.setOnClickListener(this);
