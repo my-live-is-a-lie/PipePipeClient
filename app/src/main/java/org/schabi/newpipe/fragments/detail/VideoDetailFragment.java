@@ -454,7 +454,7 @@ public final class VideoDetailFragment
         // so I have to remove the cleanup
        // bottomSheetBehavior.setBottomSheetCallback(null);
 
-        if (activity.isFinishing()) {
+         if (activity.isFinishing()) {
             playQueue = null;
             currentInfo = null;
             stack = new LinkedList<>();
@@ -598,7 +598,9 @@ public final class VideoDetailFragment
                 player.setRecovery();
             }
             openVideoPlayerAutoFullscreen();
-        } else if (id == R.id.detail_toggle_secondary_controls_view) {
+        } else if (id == R.id.detail_video_title_view
+                || id == R.id.detail_title_root_layout
+                || id == R.id.detail_toggle_secondary_controls_view) {
             toggleTitleAndSecondaryControls();
         } else if (id == R.id.overlay_thumbnail || id == R.id.overlay_metadata_layout || id == R.id.overlay_buttons_layout) {
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
@@ -658,7 +660,7 @@ public final class VideoDetailFragment
             } else {
                 openChannel(currentInfo.getUploaderUrl(), currentInfo.getUploaderName());
             }
-        } else if (id == R.id.detail_video_title_view) {
+        } else if (id == R.id.detail_video_title_view || id == R.id.detail_title_root_layout) {
             ShareUtils.copyToClipboard(requireContext(),
                     binding.detailVideoTitleView.getText().toString());
         } else if (id == R.id.detail_toggle_secondary_controls_view) {
@@ -762,8 +764,8 @@ public final class VideoDetailFragment
     protected void initListeners() {
         super.initListeners();
 
-        binding.detailVideoTitleView.setOnClickListener(this);
-        binding.detailVideoTitleView.setOnLongClickListener(this);
+        binding.detailTitleRootLayout.setOnClickListener(this);
+        binding.detailTitleRootLayout.setOnLongClickListener(this);
         binding.detailToggleSecondaryControlsView.setOnClickListener(this);
         binding.detailToggleSecondaryControlsView.setOnLongClickListener(this);
         binding.detailUploaderRootLayout.setOnClickListener(this);
