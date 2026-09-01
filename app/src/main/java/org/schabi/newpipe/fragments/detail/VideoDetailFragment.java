@@ -454,7 +454,7 @@ public final class VideoDetailFragment
         // so I have to remove the cleanup
        // bottomSheetBehavior.setBottomSheetCallback(null);
 
-         if (activity.isFinishing()) {
+        if (activity.isFinishing()) {
             playQueue = null;
             currentInfo = null;
             stack = new LinkedList<>();
