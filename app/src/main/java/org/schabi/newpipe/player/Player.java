@@ -4114,10 +4114,10 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
                 ? item.getRecoveryPosition() : 0;
         final MediaSource resolved;
         if (audioPlayerSelected()) {
-            videoResolver.setPreferLowestAudioBitrate(true);
+            applyAudioQualityTier(true);
             resolved = Optional.ofNullable(audioResolver.resolve(info))
                     .orElse(videoResolver.resolve(info, initialPositionMs));
-            videoResolver.setPreferLowestAudioBitrate(false);
+            clearAudioQualityTier();
             PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
             return resolved;
         }
@@ -4128,10 +4128,10 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
             // If the current info has only video streams with audio and if the stream is played as
             // audio, we need to use the audio resolver, otherwise the video stream will be played
             // in background.
-            videoResolver.setPreferLowestAudioBitrate(true);
+            applyAudioQualityTier(true);
             resolved = Optional.ofNullable(audioResolver.resolve(info))
                     .orElse(videoResolver.resolve(info, initialPositionMs));
-            videoResolver.setPreferLowestAudioBitrate(false);
+            clearAudioQualityTier();
             PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
             return resolved;
         }
@@ -4143,16 +4143,57 @@ case ERROR_CODE_DECODER_INIT_FAILED: {
         // Note that the video is not fetched when the app is in background because the video
         // renderer is fully disabled (see useVideoSource method), except for HLS streams
         // (see https://github.com/google/ExoPlayer/issues/9282).
-        // This branch is also used for ordinary foreground video playback. Whether it also uses
-        // the lowest audio bitrate (vs. only in background/audio-only) is user-configurable via
-        // the "Playback low audio quality" setting.
-        final boolean alwaysUseLowAudioQuality = prefs.getBoolean(
-                context.getString(R.string.playback_low_audio_quality_key), false);
-        videoResolver.setPreferLowestAudioBitrate(alwaysUseLowAudioQuality || isAudioOnly);
+        // This branch is also used for ordinary foreground video playback: applyAudioQualityTier
+        // picks the right setting (background vs. player quality) based on isAudioOnly.
+        applyAudioQualityTier(isAudioOnly);
         resolved = videoResolver.resolve(info, initialPositionMs);
-        videoResolver.setPreferLowestAudioBitrate(false);
+        clearAudioQualityTier();
         PlaybackStartupTrace.mark(startupTraceId, "resolver_finished");
         return resolved;
+    }
+
+    /**
+     * Configures {@link #videoResolver} and {@link #audioResolver} (via
+     * {@link VideoPlaybackResolver#setPreferLowestAudioBitrate}/
+     * {@link VideoPlaybackResolver#setAudioQualityTierKbps}) to select audio quality
+     * according to the user's settings, ahead of a call to either resolver's
+     * {@code resolve(...)}. Always call {@link #clearAudioQualityTier()} afterwards.
+     *
+     * <p>Precedence: the "Playback low audio quality" toggle, when on, always wins (lowest
+     * quality everywhere, foreground included). Otherwise, the "Background playback audio
+     * quality" setting applies when {@code isBackground} is true, and the "Player playback
+     * audio quality" setting applies otherwise.</p>
+     *
+     * @param isBackground whether this resolution is for background/audio-only playback
+     */
+    private void applyAudioQualityTier(final boolean isBackground) {
+        final boolean alwaysUseLowAudioQuality = prefs.getBoolean(
+                context.getString(R.string.playback_low_audio_quality_key), false);
+        if (alwaysUseLowAudioQuality) {
+            videoResolver.setPreferLowestAudioBitrate(true);
+            audioResolver.setAudioQualityTierKbps(-1);
+            return;
+        }
+        final String key = isBackground
+                ? context.getString(R.string.background_audio_quality_key)
+                : context.getString(R.string.player_audio_quality_key);
+        // ListPreference stores its value as a String even though our entryValues are numeric.
+        final String tierValue = prefs.getString(key, isBackground ? "-1" : "-2");
+        try {
+            final int tier = Integer.parseInt(tierValue);
+            videoResolver.setAudioQualityTierKbps(tier);
+            audioResolver.setAudioQualityTierKbps(tier);
+        } catch (final NumberFormatException e) {
+            // setting somehow holds an unexpected value; fall back to the general preference
+            videoResolver.setAudioQualityTierKbps(null);
+            audioResolver.setAudioQualityTierKbps(-1);
+        }
+    }
+
+    private void clearAudioQualityTier() {
+        videoResolver.setPreferLowestAudioBitrate(false);
+        videoResolver.setAudioQualityTierKbps(null);
+        audioResolver.setAudioQualityTierKbps(-1);
     }
 
     public void disablePreloadingOfCurrentTrack() {
