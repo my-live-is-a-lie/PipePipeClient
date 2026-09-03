@@ -62,6 +62,17 @@
     <string name="subscription_update_failed">تعذر تحديث الاشتراك</string>
     <string name="controls_popup_title">نافذة منبثقة</string>
     <string name="default_popup_resolution_title">الدقة الافتراضية للنوافذ المنبثقة</string>
+    <string name="player_audio_quality_title">جودة صوت المشغل</string>
+    <string name="background_audio_quality_title">جودة الصوت في الخلفية</string>
+    <string-array name="audio_quality_tier_description">
+        <item>الأدنى</item>
+        <item>٤٨ كيلوبت/ث</item>
+        <item>٥٠ كيلوبت/ث</item>
+        <item>٧٠ كيلوبت/ث</item>
+        <item>١٢٨ كيلوبت/ث</item>
+        <item>١٦٠ كيلوبت/ث</item>
+        <item>الأعلى</item>
+    </string-array>
     <string name="show_search_suggestions_title">اقتراحات البحث</string>
     <string name="show_search_suggestions_summary">اختر الاقتراحات التي تريد إظهارها عند البحث</string>
     <string name="enable_search_history_title">سجل البحث</string>
