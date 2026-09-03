@@ -56,6 +56,26 @@
         <item>25000</item>
         <item>30000</item>
     </string-array>
+    <!-- Audio quality tier picker, used for both foreground and background playback audio
+         quality settings. Values are target bitrates in kbps; -1 means "always pick the
+         lowest available bitrate" and -2 means "always pick the highest available bitrate".
+         At playback time the closest available stream to the chosen target is selected. -->
+    <string-array name="audio_quality_tier_description">
+        <item>Lowest</item>
+        <item>~50 kbps</item>
+        <item>~70 kbps</item>
+        <item>~128 kbps</item>
+        <item>~160 kbps</item>
+        <item>Highest</item>
+    </string-array>
+    <string-array name="audio_quality_tier_value">
+        <item>-1</item>
+        <item>50</item>
+        <item>70</item>
+        <item>128</item>
+        <item>160</item>
+        <item>-2</item>
+    </string-array>
     <string-array name="loading_timeout_value">
         <item>5</item>
         <item>10</item>
@@ -387,6 +407,7 @@
     <string name="last_download_type_video_key">last_dl_type_video</string>
     <string name="last_download_type_audio_key">last_dl_type_audio</string>
     <string name="last_download_type_subtitle_key">last_dl_type_subtitle</string>
+
     <!-- Remembers the exact quality chosen in the download dialog last time, so it can be
          reapplied on the next download. Falls back to the lowest quality when no match is
          found (e.g. first ever download, or the remembered quality isn't offered anymore). -->
@@ -1458,6 +1479,8 @@
     <string name="toggle_show_future_items_key">toggle_show_future_items_key</string>
     <string name="auto_background_play_key">auto_background_play_key</string>
     <string name="playback_low_audio_quality_key">playback_low_audio_quality_key</string>
+    <string name="player_audio_quality_key">player_audio_quality_key</string>
+    <string name="background_audio_quality_key">background_audio_quality_key</string>
     <string name="override_cookies_bilibili_key">override_cookies_bilibili_key</string>
     <string name="override_cookies_niconico_key">override_cookies_niconico_key</string>
     <string name="override_cookies_youtube_key">override_cookies_youtube_key</string>
