@@ -364,6 +364,38 @@ public final class ListHelper {
     }
 
     /**
+     * Resolves an audio quality tier preference value (as stored by the "Player playback
+     * audio quality" / "Background playback audio quality" settings) into an actual stream
+     * index. The tier value is either {@code -1} (always lowest), {@code -2} (always
+     * highest), or a target bitrate in kbps to match as closely as possible.
+     *
+     * @param audioQualityTierKbps -1 for lowest, -2 for highest, or a target bitrate in kbps
+     * @param audioStreams streams available for the current video
+     * @return a valid stream index, or -1 if the stream list is empty
+     */
+    public static int getAudioIndexForQualityTier(
+            final int audioQualityTierKbps, @Nullable final List<AudioStream> audioStreams) {
+        if (audioStreams == null || audioStreams.isEmpty()) {
+            return -1;
+        }
+        if (audioQualityTierKbps == -1) {
+            return getLowestBitrateAudioIndex(audioStreams);
+        }
+        if (audioQualityTierKbps == -2) {
+            int highestIndex = 0;
+            for (int i = 1; i < audioStreams.size(); i++) {
+                if (compareAudioStreamBitrate(audioStreams.get(i), audioStreams.get(highestIndex),
+                        AUDIO_FORMAT_QUALITY_RANKING) > 0) {
+                    highestIndex = i;
+                }
+            }
+            return highestIndex;
+        }
+        // a specific target bitrate: reuse the closest-bitrate matcher, format-agnostic
+        return getRememberedAudioFormatIndex(null, audioQualityTierKbps, audioStreams);
+    }
+
+    /**
      * Finds the audio stream matching a format/bitrate previously chosen by the user in the
      * download dialog. Stream list positions are not stable between videos, so match by format
      * and closest bitrate instead.
