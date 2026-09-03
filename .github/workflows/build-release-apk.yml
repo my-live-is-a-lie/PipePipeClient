@@ -1,10 +1,8 @@
 name: Build release APK
 
-# Runs automatically on every push to these branches, and can also be
-# triggered manually from the Actions tab (workflow_dispatch).
+# Manual trigger only - go to the Actions tab and click "Run workflow".
+# (Previously also ran automatically on every push; that's been removed.)
 on:
-  push:
-    branches: [ "dev", "main" ]
   workflow_dispatch:
 
 jobs:
