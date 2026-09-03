@@ -1,0 +1,72 @@
+name: Build release APK
+
+# Runs automatically on every push to these branches, and can also be
+# triggered manually from the Actions tab (workflow_dispatch).
+on:
+  push:
+    branches: [ "dev", "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # PipePipeExtractor has no published/versioned releases, so it must be built from
+      # source. actions/checkout cannot place a checkout outside the workspace (a true
+      # sibling folder), so it's checked out into a subfolder of this workspace instead;
+      # settings.gradle is told where to find it via PIPEPIPE_EXTRACTOR_PATH below.
+      - name: Checkout PipePipeExtractor (build dependency)
+        uses: actions/checkout@v4
+        with:
+          repository: InfinityLoop1308/PipePipeExtractor
+          path: extractor-src
+
+      # The project targets Java 25 (see app/build.gradle). GitHub's
+      # setup-java action can fetch this via the Temurin distribution.
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            gradle-${{ runner.os }}-
+
+      # Decode the base64 keystore secret back into a real .keystore file that
+      # app/build.gradle's signingConfigs block (KEY_PATH env var) can read.
+      - name: Decode signing keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release.keystore
+
+      - name: Build release APK
+        env:
+          PIPEPIPE_EXTRACTOR_PATH: extractor-src
+          KEY_PATH: ${{ github.workspace }}/release.keystore
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: ./gradlew assembleRelease --stacktrace --no-configuration-cache
+
+      - name: Remove decoded keystore
+        if: always()
+        run: rm -f release.keystore
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipepipe-release-apk
+          path: app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
