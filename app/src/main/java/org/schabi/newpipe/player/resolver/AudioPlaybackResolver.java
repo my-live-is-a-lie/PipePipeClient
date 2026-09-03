@@ -34,6 +34,10 @@ public class AudioPlaybackResolver implements PlaybackResolver {
     private List<String> blacklistUrls = new ArrayList<>();
     @Nullable
     private String audioTrack;
+    // Defaults to -1 (lowest) to preserve original behavior for any caller that never sets
+    // this explicitly. Player.java sets this from the "Background playback audio quality"
+    // setting before calling resolve() for background/audio-only playback.
+    private int audioQualityTierKbps = -1;
 
     public AudioPlaybackResolver(@NonNull final Context context,
                                  @NonNull final PlayerDataSource dataSource) {
@@ -54,22 +58,24 @@ public class AudioPlaybackResolver implements PlaybackResolver {
         removeTorrentStreams(audioStreams);
         audioStreams = filterUnsupportedFormats(audioStreams, context);
 
-        // Audio-only / background playback always uses the lowest available bitrate to save
-        // data and battery, regardless of the user's general quality preference. If a specific
-        // audio track was requested, still honor the track choice but pick its lowest bitrate.
+        // Audio-only / background playback quality is controlled by the "Background
+        // playback audio quality" setting (audioQualityTierKbps), defaulting to lowest to
+        // save data and battery. If a specific audio track was requested, still honor the
+        // track choice but pick within it according to the same quality tier.
         final int index;
         if (audioTrack != null) {
             final List<AudioStream> trackStreams = audioStreams.stream()
                     .filter(s -> audioTrack.equals(s.getAudioTrackId()))
                     .collect(Collectors.toList());
-            final int lowestInTrack = ListHelper.getLowestBitrateAudioIndex(trackStreams);
-            if (lowestInTrack >= 0) {
-                index = audioStreams.indexOf(trackStreams.get(lowestInTrack));
+            final int inTrack = ListHelper.getAudioIndexForQualityTier(
+                    audioQualityTierKbps, trackStreams);
+            if (inTrack >= 0) {
+                index = audioStreams.indexOf(trackStreams.get(inTrack));
             } else {
-                index = ListHelper.getLowestBitrateAudioIndex(audioStreams);
+                index = ListHelper.getAudioIndexForQualityTier(audioQualityTierKbps, audioStreams);
             }
         } else {
-            index = ListHelper.getLowestBitrateAudioIndex(audioStreams);
+            index = ListHelper.getAudioIndexForQualityTier(audioQualityTierKbps, audioStreams);
         }
         if (index < 0 || index >= audioStreams.size()) {
             return null;
@@ -107,5 +113,13 @@ public class AudioPlaybackResolver implements PlaybackResolver {
 
     public void setAudioTrack(@Nullable final String audioTrack) {
         this.audioTrack = audioTrack;
+    }
+
+    /**
+     * Sets the audio quality tier to use for background/audio-only playback: -1 for lowest,
+     * -2 for highest, or a target bitrate in kbps. Defaults to -1 (lowest) if never called.
+     */
+    public void setAudioQualityTierKbps(final int audioQualityTierKbps) {
+        this.audioQualityTierKbps = audioQualityTierKbps;
     }
 }
