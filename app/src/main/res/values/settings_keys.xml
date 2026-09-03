@@ -62,11 +62,11 @@
          At playback time the closest available stream to the chosen target is selected. -->
     <string-array name="audio_quality_tier_description">
         <item>Lowest</item>
-        <item>~48 kbps</item>
-        <item>~50 kbps</item>
-        <item>~70 kbps</item>
-        <item>~128 kbps</item>
-        <item>~160 kbps</item>
+        <item>48 kbps</item>
+        <item>50 kbps</item>
+        <item>70 kbps</item>
+        <item>128 kbps</item>
+        <item>160 kbps</item>
         <item>Highest</item>
     </string-array>
     <string-array name="audio_quality_tier_value">
