@@ -51,6 +51,8 @@ public class VideoPlaybackResolver implements PlaybackResolver {
     @Nullable
     private String audioTrack;
     private boolean preferLowestAudioBitrate = false;
+    @Nullable
+    private Integer audioQualityTierKbps = null;
 
     private List<String> blacklistUrls = new ArrayList<>();
 
@@ -167,23 +169,33 @@ public class VideoPlaybackResolver implements PlaybackResolver {
 
         // Create optional audio stream source
         // Note: ListHelper.getFilteredAudioStreams() collapses each audio track down to only
-        // its single highest-bitrate stream, so it can never be used to find the lowest bitrate.
-        // When preferLowestAudioBitrate is set, search the raw stream list instead.
+        // its single highest-bitrate stream, so it can never be used to find the lowest bitrate
+        // or match a specific quality tier. When preferLowestAudioBitrate or
+        // audioQualityTierKbps is set, search the raw stream list instead.
+        final boolean useQualityTierSelection =
+                preferLowestAudioBitrate || audioQualityTierKbps != null;
         final List<AudioStream> rawAudioStreams = info.getAudioStreams()
                 .stream().filter(s -> !blacklistUrls.contains(s.getContent()))
                 .collect(Collectors.toList());
-        final List<AudioStream> audioStreams = preferLowestAudioBitrate
+        final List<AudioStream> audioStreams = useQualityTierSelection
                 ? ListHelper.getAllPlayableAudioStreams(rawAudioStreams)
                 : ListHelper.getFilteredAudioStreams(context, rawAudioStreams);
-        final int audioIndex = preferLowestAudioBitrate
-                ? getPreferLowestAudioIndex(audioStreams, audioTrack)
-                : ListHelper.getAudioFormatIndex(context, audioStreams, audioTrack);
+        final int audioIndex;
+        if (preferLowestAudioBitrate) {
+            audioIndex = getPreferLowestAudioIndex(audioStreams, audioTrack);
+        } else if (audioQualityTierKbps != null) {
+            audioIndex = getQualityTierAudioIndex(audioStreams, audioTrack, audioQualityTierKbps);
+        } else {
+            audioIndex = ListHelper.getAudioFormatIndex(context, audioStreams, audioTrack);
+        }
         final AudioStream audio = audioStreams.isEmpty() || audioIndex == -1
                 ? null : audioStreams.get(audioIndex);
         if (audio != null) {
+            final String mode = preferLowestAudioBitrate ? "[lowest-audio mode] "
+                    : audioQualityTierKbps != null ? "[quality-tier=" + audioQualityTierKbps + "] "
+                    : "";
             android.util.Log.i("VideoPlaybackResolver",
-                    (preferLowestAudioBitrate ? "[lowest-audio mode] " : "")
-                            + "Selected audio: " + audio.getFormat() + "@"
+                    mode + "Selected audio: " + audio.getFormat() + "@"
                             + audio.getAverageBitrate() + "kbps");
         }
 
@@ -307,6 +319,24 @@ public class VideoPlaybackResolver implements PlaybackResolver {
         return preferLowestAudioBitrate;
     }
 
+    /**
+     * Sets an explicit audio quality tier to use for {@link #resolve(StreamInfo, long)},
+     * overriding the user's general audio quality preference. Pass {@code null} to go back to
+     * the general preference. Ignored while {@link #preferLowestAudioBitrate} is {@code true}
+     * (background/audio-only playback always wins, regardless of this setting).
+     *
+     * @param audioQualityTierKbps -1 for lowest, -2 for highest, a target bitrate in kbps, or
+     *                             {@code null} to use the general quality preference instead
+     */
+    public void setAudioQualityTierKbps(@Nullable final Integer audioQualityTierKbps) {
+        this.audioQualityTierKbps = audioQualityTierKbps;
+    }
+
+    @Nullable
+    public Integer getAudioQualityTierKbps() {
+        return audioQualityTierKbps;
+    }
+
     private static int getPreferLowestAudioIndex(
             @NonNull final List<AudioStream> audioStreams, @Nullable final String audioTrack) {
         if (audioTrack != null) {
@@ -319,5 +349,21 @@ public class VideoPlaybackResolver implements PlaybackResolver {
             }
         }
         return ListHelper.getLowestBitrateAudioIndex(audioStreams);
+    }
+
+    private static int getQualityTierAudioIndex(
+            @NonNull final List<AudioStream> audioStreams, @Nullable final String audioTrack,
+            final int audioQualityTierKbps) {
+        if (audioTrack != null) {
+            final List<AudioStream> trackStreams = audioStreams.stream()
+                    .filter(s -> audioTrack.equals(s.getAudioTrackId()))
+                    .collect(Collectors.toList());
+            final int inTrack = ListHelper.getAudioIndexForQualityTier(
+                    audioQualityTierKbps, trackStreams);
+            if (inTrack >= 0) {
+                return audioStreams.indexOf(trackStreams.get(inTrack));
+            }
+        }
+        return ListHelper.getAudioIndexForQualityTier(audioQualityTierKbps, audioStreams);
     }
 }
