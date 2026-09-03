@@ -32,8 +32,8 @@ class QualityClickListener(
         val videoStream = player.selectedVideoStream
         if (videoStream != null) {
             player.binding.qualityTextView.text =
-                videoStream.codec.uppercase(Locale.getDefault()).split("\\.".toRegex())
-                    .toTypedArray()[0] + " " + videoStream.resolution
+                videoStream.resolution + " " + videoStream.codec.uppercase(Locale.getDefault())
+                    .split("\\.".toRegex()).toTypedArray()[0]
         }
 
         player.saveWasPlaying()
